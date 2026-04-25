@@ -18,3 +18,9 @@ Why this specific package?
 - `vite-plugin-svg-icons`: Abandoned/Legacy.
 - `@spiriit/vite-plugin-svg-spritemap`: The community standard, but you have to write your own custom Node scripts in Vite to get TypeScript autocomplete.
 - `vite-plugin-icons-spritesheet`: The winner. Handles SVGO optimization automatically, outputs a pure HTML sprite, and instantly auto-generates a strict TypeScript union type (`type IconName = 'home' | 'user'`) whenever an SVG is added or removed. Perfect type safety, zero manual scripting.
+
+### What are those `@container`, `clamp()` css!??
+
+Responsive fluid design baby!
+
+Reducing media breakpoints `md:`, `lg:`, ... Now you only use container breakpoints to swap layout

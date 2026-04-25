@@ -6,7 +6,7 @@ export default function RootLayout() {
   return (
     <div class="flex w-full flex-col">
       <div class="grid min-h-dvh grid-rows-[auto_1fr]">
-        <header class="@container/nav bg-yellow-200 px-12 py-1 text-2xl text-walnut">
+        <header class="@container/nav bg-yellow-200 px-[clamp(0.25rem,4dvi,3rem)] py-1 text-2xl text-walnut">
           <Link
             to="/"
             class="inline-block font-pencil text-f4xl font-bold transition-all duration-200 hover:scale-105 hover:rotate-3 hover:text-amber-800"
@@ -20,16 +20,27 @@ export default function RootLayout() {
         </main>
       </div>
 
-      <footer class="@container/footer grid grid-cols-2 items-center justify-items-center bg-amber-200 px-12 py-1 text-fxs">
+      <footer class="@container/footer grid grid-cols-2 items-center bg-amber-200 px-[clamp(0.25rem,2dvi,3rem)] py-1 text-fxs">
         <p class="justify-self-start">Copyright © 2026 PTPhongKMF</p>
-        <a
-          href="https://github.com/ptphongkmf/take-a-note/issues"
-          target="_blank"
-          class="flex items-center justify-center gap-1 justify-self-end leading-none transition-all duration-200 hover:text-amber-800"
-        >
-          <Icon name="bug" class="size-[1em]" />
-          <span>Report issues</span>
-        </a>
+
+        <section class="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 justify-self-end">
+          <a
+            href="https://github.com/ptphongkmf/take-a-note/issues"
+            target="_blank"
+            class="flex items-center justify-center gap-1 leading-none transition-all duration-200 hover:text-amber-800"
+          >
+            <Icon name="bug" class="size-[1em]" />
+            <span>Report issues</span>
+          </a>
+          <a
+            href="https://github.com/ptphongkmf/take-a-note/discussions"
+            target="_blank"
+            class="flex items-center justify-center gap-1 leading-none transition-all duration-200 hover:text-amber-800"
+          >
+            <Icon name="lightbulb" class="size-[1em]" />
+            <span>Suggestions</span>
+          </a>
+        </section>
       </footer>
     </div>
   );

@@ -13,8 +13,9 @@
 
   "nodeModulesDir": "auto",
   "imports": {
-    "#pages/": "./src/pages/",
     "#app/": "./src/app/",
+    "#pages/": "./src/pages/",
+    "#entities/": "./src/entities/",
     "#shared/": "./src/shared/",
 
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^2.0.2",
