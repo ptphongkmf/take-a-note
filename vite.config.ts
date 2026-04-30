@@ -13,6 +13,7 @@ export default defineConfig({
       autoCodeSplitting: true,
       routesDirectory: "src/app/router/routes",
       generatedRouteTree: "src/app/router/routeTree.gen.ts",
+      tmpDir: ".cache/.tanstack/tmp",
     }),
     solid(),
     tailwindcss(),

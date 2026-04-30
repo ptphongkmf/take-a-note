@@ -4,7 +4,7 @@ import Icon from "#shared/ui/icon/icon.tsx";
 
 export default function Root() {
   return (
-    <div class="flex w-full flex-col">
+    <div class="grid w-full auto-rows-auto grid-cols-1">
       <div class="grid min-h-dvh grid-rows-[auto_1fr]">
         <header class="@container/nav bg-yellow-200 px-[clamp(0.25rem,4dvi,3rem)] py-1 text-2xl text-walnut">
           <Link

@@ -1,16 +1,16 @@
 import * as v from "@valibot/valibot";
-
-const NoteFormats = {
-  plaintext: "plaintext",
-  markdown: "markdown",
-  richtext: "richtext",
-};
+import {
+  EditorModes,
+  LexicalEditorAstSchema,
+} from "#shared/editor/model/schema.ts";
 
 export const NoteSchema = v.object({
   id: v.string(),
-  format: v.enum(NoteFormats),
+  mode: v.enum(EditorModes),
   title: v.string(),
-  content: v.string(),
-  createdAt: v.date(),
-  updatedAt: v.date(),
+  content: LexicalEditorAstSchema,
+  createdAt: v.string(),
+  updatedAt: v.string(),
 });
+
+export type NoteOutput = v.InferOutput<typeof NoteSchema>;

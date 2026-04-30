@@ -24,3 +24,7 @@ Why this specific package?
 Responsive fluid design baby!
 
 Reducing media breakpoints `md:`, `lg:`, ... Now you only use container breakpoints to swap layout
+
+### Formisch... for a title, mode???
+
+Just like Tanstack Router, i just want an excuse to try the package

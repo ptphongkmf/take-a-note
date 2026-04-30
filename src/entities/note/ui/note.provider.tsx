@@ -1,9 +1,11 @@
 import { createContext, type ParentProps, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 
+// redundant for now
+
 const NoteContext = createContext();
 
-export function NoteProvider(props: ParentProps) {
+function _NoteProvider(props: ParentProps) {
   const [note, setNote] = createStore();
 
   const noteStore = { note, setNote };
@@ -15,7 +17,7 @@ export function NoteProvider(props: ParentProps) {
   );
 }
 
-export function useNote() {
+function _useNote() {
   const context = useContext(NoteContext);
 
   if (!context) {

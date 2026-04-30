@@ -1,0 +1,25 @@
+import * as v from "@valibot/valibot";
+import type { ElementFormatType, SerializedLexicalNode } from "lexical";
+
+export const EditorModes = {
+  plaintext: "plain-text",
+  markdown: "markdown",
+  richtext: "rich-text",
+} as const;
+
+export type EditorMode = typeof EditorModes[keyof typeof EditorModes];
+
+export const LexicalEditorAstSchema = v.object({
+  root: v.object({
+    type: v.literal("root"),
+    children: v.custom<SerializedLexicalNode[]>(
+      (val) => Array.isArray(val),
+    ),
+    direction: v.nullable(v.union([v.literal("ltr"), v.literal("rtl")])),
+    format: v.custom<ElementFormatType>(
+      (val) => typeof val === "string",
+    ),
+    indent: v.number(),
+    version: v.number(),
+  }),
+});
