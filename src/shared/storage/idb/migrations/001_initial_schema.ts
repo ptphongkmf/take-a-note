@@ -15,8 +15,8 @@ import type { IDBPDatabase } from "idb";
  * - `content` object (Lexical AST)
  */
 export function runInitialSchema(db: IDBPDatabase) {
-  const noteStore = db.createObjectStore("noteMeta", { keyPath: "id" });
+  const noteStore = db.createObjectStore("note_meta", { keyPath: "id" });
   noteStore.createIndex("updatedAt", "updatedAt");
 
-  db.createObjectStore("noteContent", { keyPath: "noteId" });
+  db.createObjectStore("note_content", { keyPath: "noteId" });
 }

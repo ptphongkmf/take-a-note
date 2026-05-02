@@ -11,7 +11,9 @@ import {
   type AppErrorOptions,
 } from "#shared/lib/errors/app-error.ts";
 
-export type NoteServiceErrorCode = "NOTE_NOT_FOUND";
+export type NoteServiceErrorCode =
+  | "NOTE_META_NOT_FOUND"
+  | "NOTE_CONTENT_NOT_FOUND";
 // |
 // | 'NOTE_ALREADY_EXISTS'
 // | 'NOTE_VALIDATION_FAILED'
@@ -54,13 +56,13 @@ export function getNoteMeta(id: string) {
     Result.succeed(id),
     Result.andThen((unwrappedId) =>
       Result.try({
-        try: () => idbClient().get("note", unwrappedId),
-        catch: (e) => new IdbOperationError("read", "note", { cause: e }),
+        try: () => idbClient().get("note_meta", unwrappedId),
+        catch: (e) => new IdbOperationError("read", "note_meta", { cause: e }),
       })
     ),
     Result.andThen((note) =>
       note === undefined
-        ? Result.fail(new NoteServiceError("NOTE_NOT_FOUND"))
+        ? Result.fail(new NoteServiceError("NOTE_META_NOT_FOUND"))
         : Result.succeed(note)
     ),
     Result.andThen((note) => parseSafe(NoteMetaIdbSchema, note)),
@@ -72,13 +74,14 @@ export function getNoteContent(id: string) {
     Result.succeed(id),
     Result.andThen((unwrappedId) =>
       Result.try({
-        try: () => idbClient().get("note", unwrappedId),
-        catch: (e) => new IdbOperationError("read", "note", { cause: e }),
+        try: () => idbClient().get("note_content", unwrappedId),
+        catch: (e) =>
+          new IdbOperationError("read", "note_content", { cause: e }),
       })
     ),
     Result.andThen((note) =>
       note === undefined
-        ? Result.fail(new NoteServiceError("NOTE_NOT_FOUND"))
+        ? Result.fail(new NoteServiceError("NOTE_CONTENT_NOT_FOUND"))
         : Result.succeed(note)
     ),
     Result.andThen((noteContent) =>

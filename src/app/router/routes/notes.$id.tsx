@@ -17,7 +17,8 @@ export const Route = createFileRoute("/notes/$id")({
       Result.bind("noteContet", (params) => getNoteContent(params.id)),
       Result.map((result) => mapFromIdbToNote(result.note, result.noteContet)),
       Result.mapError((e) => {
-        if (e instanceof NoteServiceError && e.code === "NOTE_NOT_FOUND") {
+        // TODO: how to handle "NOTE_CONTENT_NOT_FOUND" gracefully when meta exist?, make it blank new state?
+        if (e instanceof NoteServiceError && e.code === "NOTE_META_NOT_FOUND") {
           return notFound();
         }
 

@@ -21,7 +21,7 @@ export const NoteContentIdbSchema = v.object({
 export type NoteContentIdbOutput = v.InferOutput<typeof NoteContentIdbSchema>;
 
 export interface TakeANoteDbSchema extends DBSchema {
-  note: {
+  note_meta: {
     key: NoteMetaIdbOutput["id"];
     value: NoteMetaIdbOutput;
     indexes: {
@@ -29,7 +29,7 @@ export interface TakeANoteDbSchema extends DBSchema {
     };
   };
 
-  noteContent: {
+  note_content: {
     key: NoteContentIdbOutput["noteId"];
     value: NoteContentIdbOutput;
   };

@@ -1,8 +1,14 @@
 import { createRootRoute } from "@tanstack/solid-router";
 import RootLayout from "#app/layouts/root-layout.tsx";
-import { NotFound } from "#pages/not-found/not-found.tsx";
+import { RootNotFound } from "#pages/not-found/root-not-found.tsx";
+import RootCriticalError from "#pages/critical-error/root-critical-error.tsx";
+import { initIndexedDB } from "#shared/storage/idb/idb-client.ts";
 
 export const Route = createRootRoute({
+  beforeLoad: async () => {
+    await initIndexedDB();
+  },
   component: RootLayout,
-  notFoundComponent: NotFound,
+  notFoundComponent: RootNotFound,
+  errorComponent: RootCriticalError,
 });
