@@ -1,5 +1,5 @@
 import { LexicalComposer } from "@ryotarofr/lexical-solid/LexicalComposer";
-import { PlainTextPlugin } from "@ryotarofr/lexical-solid/LexicalPlainTextPlugin";
+import { RichTextPlugin } from "@ryotarofr/lexical-solid/LexicalRichTextPlugin";
 import { HistoryPlugin } from "@ryotarofr/lexical-solid/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@ryotarofr/lexical-solid/LexicalOnChangePlugin";
 import { LexicalErrorBoundary } from "@ryotarofr/lexical-solid/LexicalErrorBoundary";
@@ -8,7 +8,9 @@ import type { EditorState, SerializedEditorState } from "lexical";
 import {
   type ComponentProps,
   createContext,
+  createSignal,
   Match,
+  onMount,
   type ParentProps,
   Show,
   splitProps,
@@ -18,6 +20,7 @@ import {
 import { c } from "#shared/lib/class-merger/c.ts";
 import type { EditorMode } from "#shared/editor/schema.ts";
 import { getEditorInitialConfig } from "#shared/editor/initial-config.ts";
+import { DraggableBlockPlugin } from "#shared/editor/plugins/draggable-block.tsx";
 
 const EditorModeContext = createContext<EditorMode>("plain-text");
 
@@ -77,9 +80,16 @@ interface EditorInputProps extends ComponentProps<"div"> {
 export function EditorInput(props: EditorInputProps) {
   const [local, others] = splitProps(props, ["class", "placeholder"]);
 
+  let divWrapperRef: HTMLDivElement | undefined;
+  const [wrapperRef, setWrapperRef] = createSignal<HTMLElement>();
+
+  onMount(() => {
+    if (divWrapperRef) setWrapperRef(divWrapperRef);
+  });
+
   const mode = useContext(EditorModeContext);
 
-  function sharedPlaceholder() {
+  function placeholderFn() {
     return (
       <div
         textContent={local.placeholder ?? ""}
@@ -94,15 +104,18 @@ export function EditorInput(props: EditorInputProps) {
   }
 
   return (
-    <div class="relative size-full">
+    <div
+      ref={divWrapperRef}
+      class="relative size-full"
+    >
       <Switch>
         <Match when={mode === "plain-text"}>
-          <PlainTextPlugin
+          <RichTextPlugin
             contentEditable={
               <ContentEditable
                 {...others}
                 aria-placeholder={local.placeholder ?? ""}
-                placeholder={sharedPlaceholder}
+                placeholder={placeholderFn}
                 class={c("size-full", local.class)}
               />
             }
@@ -110,6 +123,10 @@ export function EditorInput(props: EditorInputProps) {
           />
         </Match>
       </Switch>
+
+      <Show when={wrapperRef()}>
+        {(ref) => <DraggableBlockPlugin anchorRef={ref()} />}
+      </Show>
     </div>
   );
 }

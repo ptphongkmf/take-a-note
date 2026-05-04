@@ -69,7 +69,7 @@ export default function NoteEditor(props: NoteEditorProps) {
       >
         <EditorInput
           placeholder="Note content..."
-          class="rounded-sm border border-amber-600 bg-paper-editor px-3 py-2 text-base focus:outline-3 focus:outline-amber-300"
+          class="rounded-sm border border-amber-600 bg-paper-editor px-8 py-2 text-base focus:outline-3 focus:outline-amber-300"
         />
       </Editor>
     </Form>
