@@ -17,7 +17,7 @@ interface SaveNoteManagerParams {
 export default function createSaveNoteManager(params: SaveNoteManagerParams) {
   let pendingSavePayload: NoteDtoOutput | undefined = undefined;
 
-  const saveMutation = useMutation(() => saveNoteMutation.options);
+  const saveMutation = useMutation(() => saveNoteMutation);
 
   const debouncedSave = debounce(() => {
     params.triggerFormSubmit();

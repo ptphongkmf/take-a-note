@@ -1,10 +1,9 @@
-import { createSignal, Match } from "solid-js";
+import { Match } from "solid-js";
 import { splitProps } from "solid-js";
 import type { ComponentProps } from "solid-js";
 import { Switch } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import Icon from "#shared/ui/icon/icon.tsx";
-import { createEffect } from "solid-js";
 
 interface SaveIndicatorProps extends ComponentProps<"div"> {
   isDirty: boolean;
