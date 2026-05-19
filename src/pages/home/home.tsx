@@ -2,7 +2,7 @@ import NoteEditor from "#pages/home/ui/note-editor.tsx";
 import type { NoteDtoOutput } from "#shared/api/services/note.ts";
 
 interface HomeProps {
-  note?: NoteDtoOutput;
+  note: NoteDtoOutput;
 }
 
 export default function Home(props: HomeProps) {
@@ -15,7 +15,7 @@ export default function Home(props: HomeProps) {
 
       <NoteEditor
         note={props.note}
-        class="size-full @5xl/main:col-start-2"
+        class="@container @5xl/main:col-start-2"
       />
 
       <aside class="@container/sidebar hidden rounded-md border border-amber-200 p-4 @5xl/main:col-start-3 @5xl/main:block">

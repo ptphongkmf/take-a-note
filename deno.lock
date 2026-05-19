@@ -25,7 +25,7 @@
     "npm:lexical@0.39": "0.39.0",
     "npm:solid-js@^1.9.12": "1.9.12",
     "npm:tailwind-merge@^3.5.0": "3.5.0",
-    "npm:tailwindcss@^4.2.3": "4.2.3",
+    "npm:tailwindcss@^4.3.0": "4.3.0",
     "npm:type-fest@^5.6.0": "5.6.0",
     "npm:vite-plugin-icons-spritesheet@^3.0.1": "3.0.1_vite@8.0.3__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2",
     "npm:vite-plugin-solid@^2.11.11": "2.11.11_solid-js@1.9.12_vite@8.0.3__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2",
@@ -961,7 +961,7 @@
         "lightningcss",
         "magic-string",
         "source-map-js",
-        "tailwindcss"
+        "tailwindcss@4.2.3"
       ]
     },
     "@tailwindcss/oxide-android-arm64@4.2.3": {
@@ -1045,7 +1045,7 @@
       "dependencies": [
         "@tailwindcss/node",
         "@tailwindcss/oxide",
-        "tailwindcss",
+        "tailwindcss@4.2.3",
         "vite"
       ]
     },
@@ -1749,14 +1749,14 @@
       "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",
       "bin": true
     },
-    "seroval-plugins@1.5.2_seroval@1.5.2": {
+    "seroval-plugins@1.5.2_seroval@1.5.4": {
       "integrity": "sha512-qpY0Cl+fKYFn4GOf3cMiq6l72CpuVaawb6ILjubOQ+diJ54LfOWaSSPsaswN8DRPIPW4Yq+tE1k5aKd7ILyaFg==",
       "dependencies": [
         "seroval"
       ]
     },
-    "seroval@1.5.2": {
-      "integrity": "sha512-xcRN39BdsnO9Tf+VzsE7b3JyTJASItIV1FVFewJKCFcW4s4haIKS3e6vj8PGB9qBwC7tnuOywQMdv5N4qkzi7Q=="
+    "seroval@1.5.4": {
+      "integrity": "sha512-46uFvgrXTVxZcUorgSSRZ4y+ieqLLQRMlG4bnCZKW3qI6BZm7Rg4ntMW4p1mILEEBZWrFlcpp0AyIIlM6jD9iw=="
     },
     "shebang-command@2.0.0": {
       "integrity": "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==",
@@ -1812,6 +1812,9 @@
     },
     "tailwindcss@4.2.3": {
       "integrity": "sha512-fA/NX5gMf0ooCLISgB0wScaWgaj6rjTN2SVAwleURjiya7ITNkV+VMmoHtKkldP6CIZoYCZyxb8zP/e2TWoEtQ=="
+    },
+    "tailwindcss@4.3.0": {
+      "integrity": "sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q=="
     },
     "tapable@2.3.2": {
       "integrity": "sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA=="
@@ -1972,7 +1975,7 @@
       "npm:lexical@0.39",
       "npm:solid-js@^1.9.12",
       "npm:tailwind-merge@^3.5.0",
-      "npm:tailwindcss@^4.2.3",
+      "npm:tailwindcss@^4.3.0",
       "npm:type-fest@^5.6.0",
       "npm:vite-plugin-icons-spritesheet@^3.0.1",
       "npm:vite-plugin-solid@^2.11.11",

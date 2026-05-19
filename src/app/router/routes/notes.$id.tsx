@@ -1,26 +1,35 @@
 import { createFileRoute } from "@tanstack/solid-router";
 import Home from "#pages/home/home.tsx";
-import { Result } from "@praha/byethrow";
 import { notFound } from "@tanstack/solid-router";
-import { getNote } from "#shared/api/services/note.ts";
+import { GetNoteError } from "#shared/api/services/note.ts";
+import { queryClient } from "#shared/api/query-client.ts";
+import { noteDetailQuery } from "#entities/note/api/queries/note-detail-query.ts";
+import { RouterError } from "#app/router/router.ts";
+import { setLastOpenedNoteId } from "#entities/note/api/last-opened-note.ts";
 
 export const Route = createFileRoute("/notes/$id")({
-  loader: ({ params }) => {
-    const result = Result.pipe(
-      Result.succeed({ ...params }),
-      Result.andThen((params) => getNote(params.id)),
-      Result.mapError((e) => {
-        // TODO: how to handle "NOTE_CONTENT_NOT_FOUND" gracefully when meta exist?, make it blank new state?
-        if (e.code === "NOTE_NOT_FOUND") {
-          return notFound();
-        }
+  loader: async ({ params }) => {
+    try {
+      const note = await queryClient.ensureQueryData(
+        noteDetailQuery.detail(params.id),
+      );
 
-        return e;
-      }),
-      // TODO: handle validation error, will have to do with isCorrupt state...
-    );
+      setLastOpenedNoteId(note.id);
 
-    return Result.unwrap(result);
+      return note;
+    } catch (e) {
+      if (e instanceof GetNoteError && e.code === "NOTE_NOT_FOUND") {
+        notFound({ throw: true });
+      }
+
+      throw new RouterError(
+        `Unexpected error occurred while loading route: ${Route.path}`,
+        {
+          code: "UNKNOWN_ROUTER_FAILURE",
+          cause: e,
+        },
+      );
+    }
   },
   component: () => {
     const note = Route.useLoaderData();

@@ -8,17 +8,10 @@ import {
   EditorFormats,
   SerializedEditorStateSchema,
 } from "#shared/editor/schema.ts";
-
-export type NoteServiceErrorCode = GetNoteErrorCode | SaveNoteErrorCode;
-
-export class NoteServiceError<
-  TCode extends NoteServiceErrorCode = NoteServiceErrorCode,
-> extends AppError<TCode> {
-  public override readonly name = "NoteServiceError";
-}
+import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
 
 const NoteDtoSchema = v.object({
-  id: v.string(),
+  id: vTrimNonEmptyString,
   title: v.string(),
   format: v.enum(EditorFormats),
   content: v.optional(SerializedEditorStateSchema),
@@ -39,9 +32,13 @@ type GetNoteErrorCode =
   | "NOTE_NOT_FOUND"
   | "NOTE_VALIDATION_FAILED";
 
+export class GetNoteError extends AppError<GetNoteErrorCode> {
+  public override readonly name = "GetNoteError";
+}
+
 export function getNote(
   id: string,
-): Result.ResultAsync<NoteDtoOutput, NoteServiceError<GetNoteErrorCode>> {
+): Result.ResultAsync<NoteDtoOutput, GetNoteError> {
   return Result.pipe(
     Result.try({
       try: async () => {
@@ -82,7 +79,7 @@ export function getNote(
             { code: "IDB_UNKNOWN_FAILURE", cause: e },
           );
 
-        return new NoteServiceError(
+        return new GetNoteError(
           "Failed to retrieve the note from IndexedDB",
           { code: "NOTE_GET_FAILED", cause: idbError },
         );
@@ -91,7 +88,7 @@ export function getNote(
     Result.andThen(({ meta, content }) => {
       if (meta === undefined && content === undefined) {
         return Result.fail(
-          new NoteServiceError(`Note with id "${id}" not found`, {
+          new GetNoteError(`Note with id "${id}" not found`, {
             code: "NOTE_NOT_FOUND",
           }),
         );
@@ -102,7 +99,7 @@ export function getNote(
     Result.andThen((noteDto) => safeParse(NoteDtoSchema, noteDto)),
     Result.mapError((e) => {
       if (e.name === "ValidationError") {
-        return new NoteServiceError(
+        return new GetNoteError(
           "Failed to retrieve the note from IndexedDB",
           { code: "NOTE_VALIDATION_FAILED", cause: e },
         );
@@ -115,9 +112,13 @@ export function getNote(
 
 type SaveNoteErrorCode = "NOTE_SAVE_FAILED";
 
+export class SaveNoteError extends AppError<SaveNoteErrorCode> {
+  public override readonly name = "SaveNoteError";
+}
+
 export function saveNote(note: NoteDtoOutput): Result.ResultAsync<
   NoteDtoOutput,
-  NoteServiceError<SaveNoteErrorCode>
+  SaveNoteError
 > {
   return Result.try({
     try: async () => {
@@ -174,7 +175,7 @@ export function saveNote(note: NoteDtoOutput): Result.ResultAsync<
           { code: "IDB_UNKNOWN_FAILURE", cause: e },
         );
 
-      return new NoteServiceError(
+      return new SaveNoteError(
         "Failed to save the note to IndexedDB",
         { code: "NOTE_SAVE_FAILED", cause: idbError },
       );

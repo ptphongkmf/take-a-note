@@ -2,7 +2,6 @@ import {
   createForm,
   Field,
   Form,
-  getAllErrors,
   getInput,
   reset,
   submit,
@@ -10,7 +9,6 @@ import {
 } from "@formisch/solid";
 import { type ComponentProps, createSignal, splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
-import { monotonicUlid } from "@std/ulid";
 import { Editor, EditorInput } from "#shared/editor/lexical-editor.tsx";
 import * as v from "@valibot/valibot";
 import type { EditorState } from "lexical";
@@ -28,35 +26,33 @@ import { createEffect } from "solid-js";
 import { on } from "solid-js";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
 import { batch } from "solid-js";
+import { useQueryClient } from "@tanstack/solid-query";
+import { noteDetailQuery } from "#entities/note/api/queries/note-detail-query.ts";
 
 interface NoteEditorProps extends
   Omit<
     ComponentProps<"form">,
     "onSubmit" | "children" | "action" | "method" | "onReset"
   > {
-  note?: NoteDtoOutput;
+  note: NoteDtoOutput;
 }
 
-const NoteFormSchema = v.pipe(
-  v.object({
-    id: vTrimNonEmptyString,
-    title: v.string(),
-    format: v.enum(EditorFormats),
-    isCorrupt: v.boolean(),
-    createdAt: vTemporalInstant,
-    updatedAt: vTemporalInstant,
-  }),
-  v.transform((input) => ({
-    ...input,
-    ...(!input.title.trim() &&
-      { title: "Untitled Note " + input.createdAt.toLocaleString() }),
-    updatedAt: Temporal.Now.instant(),
-  })),
-);
+const NoteFormSchema = v.object({
+  id: vTrimNonEmptyString,
+  title: v.string(),
+  format: v.enum(EditorFormats),
+  isCorrupt: v.boolean(),
+  createdAt: vTemporalInstant,
+  updatedAt: v.pipe(
+    vTemporalInstant,
+    v.transform(() => Temporal.Now.instant()),
+  ),
+});
 type NoteFormOutput = v.InferOutput<typeof NoteFormSchema>;
 
 export default function NoteEditor(props: NoteEditorProps) {
   const [local, others] = splitProps(props, ["class", "note"]);
+  const queryClient = useQueryClient();
 
   const [lastChangedAt, setLastChangedAt] = createSignal(
     Temporal.Now.instant(),
@@ -69,12 +65,12 @@ export default function NoteEditor(props: NoteEditorProps) {
   const noteForm = createForm({
     schema: NoteFormSchema,
     initialInput: {
-      id: local.note?.id ?? monotonicUlid(),
-      title: local.note?.title ?? "",
-      format: local.note?.format ?? "plain-text",
-      isCorrupt: local.note?.isCorrupt ?? false,
-      createdAt: local.note?.createdAt ?? Temporal.Now.instant(),
-      updatedAt: local.note?.updatedAt ?? Temporal.Now.instant(),
+      id: local.note.id,
+      title: local.note.title,
+      format: local.note.format,
+      isCorrupt: local.note.isCorrupt,
+      createdAt: local.note.createdAt,
+      updatedAt: local.note.updatedAt,
     },
   });
 
@@ -108,6 +104,11 @@ export default function NoteEditor(props: NoteEditorProps) {
           Result.unwrap(jsonStringify(savedNote.content)),
         );
       });
+
+      queryClient.setQueryData(
+        noteDetailQuery.detail(savedNote.id).queryKey,
+        savedNote,
+      );
     },
   });
 
@@ -125,10 +126,6 @@ export default function NoteEditor(props: NoteEditorProps) {
     saveManager.cancelAutosave();
     saveManager.executeSave(note);
   }
-
-  createEffect(() => {
-    console.log("dirty: " + isDirty());
-  });
 
   return (
     <Form
