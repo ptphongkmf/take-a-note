@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/solid-router";
 import Home from "#pages/home/home.tsx";
-import { notFound } from "@tanstack/solid-router";
 import { GetNoteError } from "#shared/api/services/note.ts";
 import { queryClient } from "#shared/api/query-client.ts";
 import { noteDetailQuery } from "#entities/note/api/queries/note-detail-query.ts";
 import { RouterError } from "#app/router/router.ts";
-import { setLastOpenedNoteId } from "#entities/note/api/last-opened-note.ts";
+import {
+  clearLastOpenedNoteId,
+  setLastOpenedNoteId,
+} from "#entities/note/api/last-opened-note.ts";
+import { redirect } from "@tanstack/solid-router";
 
 export const Route = createFileRoute("/notes/$id")({
   loader: async ({ params }) => {
@@ -19,7 +22,12 @@ export const Route = createFileRoute("/notes/$id")({
       return note;
     } catch (e) {
       if (e instanceof GetNoteError && e.code === "NOTE_NOT_FOUND") {
-        notFound({ throw: true });
+        // self-recovery, redirect to new notes instantly
+        clearLastOpenedNoteId();
+        throw redirect({
+          to: "/",
+          replace: true,
+        });
       }
 
       throw new RouterError(

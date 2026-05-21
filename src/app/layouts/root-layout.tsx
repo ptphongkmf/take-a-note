@@ -2,6 +2,7 @@ import { Outlet } from "@tanstack/solid-router";
 import { Link } from "@tanstack/solid-router";
 import Icon from "#shared/ui/icon/icon.tsx";
 
+// TODO: remove name on @container/, YAGNI, only use if there is a case where we specifically want to target it
 export default function RootLayout() {
   return (
     <div class="grid w-full auto-rows-auto grid-cols-1">
