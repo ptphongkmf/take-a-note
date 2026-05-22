@@ -21,7 +21,7 @@ import { jsonStringify } from "#shared/lib/json/json-stringify.ts";
 import { vTemporalInstant } from "#shared/lib/schema/datetime.ts";
 import { Result } from "@praha/byethrow";
 import { createNoteDirtyState } from "#entities/note/model/note-dirty-state.ts";
-import type { NoteDtoOutput } from "#shared/api/services/note.ts";
+import type { NoteDtoValid } from "#shared/api/services/note.ts";
 import { createEffect } from "solid-js";
 import { on } from "solid-js";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
@@ -34,14 +34,14 @@ interface NoteEditorProps extends
     ComponentProps<"form">,
     "onSubmit" | "children" | "action" | "method" | "onReset"
   > {
-  note: NoteDtoOutput;
+  note: NoteDtoValid;
 }
 
 const NoteFormSchema = v.object({
   id: vTrimNonEmptyString,
   title: v.string(),
   format: v.enum(EditorFormats),
-  isCorrupt: v.boolean(),
+  isCorrupt: v.literal(false),
   createdAt: vTemporalInstant,
   updatedAt: v.pipe(
     vTemporalInstant,
@@ -89,7 +89,7 @@ export default function NoteEditor(props: NoteEditorProps) {
     isDirty,
     lastChangedAt: lastChangedAt,
     triggerFormSubmit: () => submit(noteForm),
-    onSaveSuccess: (savedNote: NoteDtoOutput) => {
+    onSaveSuccess: (savedNote: NoteDtoValid) => {
       console.log("Note saved success ran");
       batch(() => {
         reset(noteForm, {

@@ -1,8 +1,9 @@
 import NoteEditor from "#pages/home/ui/note-editor.tsx";
-import type { NoteDtoOutput } from "#shared/api/services/note.ts";
+import type { NoteDto } from "#shared/api/services/note.ts";
+import { Show } from "solid-js";
 
 interface HomeProps {
-  note: NoteDtoOutput;
+  note: NoteDto;
 }
 
 export default function Home(props: HomeProps) {
@@ -13,10 +14,15 @@ export default function Home(props: HomeProps) {
         <p class="text-fluid-sm text-amber-800">Left Sidebar...</p>
       </aside>
 
-      <NoteEditor
-        note={props.note}
-        class="@container @5xl/main:col-start-2"
-      />
+      {/* TODO: add fallback value which is safemode viewer for corrupt note */}
+      <Show when={!props.note.isCorrupt && props.note}>
+        {(note) => (
+          <NoteEditor
+            note={note()}
+            class="@container @5xl/main:col-start-2"
+          />
+        )}
+      </Show>
 
       <aside class="@container/sidebar hidden rounded-md border border-amber-200 p-4 @5xl/main:col-start-3 @5xl/main:block">
         <p class="text-fluid-sm text-amber-800">

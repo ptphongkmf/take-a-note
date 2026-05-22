@@ -10,22 +10,36 @@ import {
 } from "#shared/editor/schema.ts";
 import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
 
-const NoteDtoSchema = v.object({
-  id: vTrimNonEmptyString,
-  title: v.string(),
-  format: v.enum(EditorFormats),
-  content: v.optional(SerializedEditorStateSchema),
-  isCorrupt: v.boolean(),
-  createdAt: v.pipe(
-    v.number(),
-    v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
-  ),
-  updatedAt: v.pipe(
-    v.number(),
-    v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
-  ),
-});
-export type NoteDtoOutput = v.InferOutput<typeof NoteDtoSchema>;
+const NoteDtoSchema = v.variant("isCorrupt", [
+  v.object({
+    id: vTrimNonEmptyString,
+    title: v.string(),
+    format: v.enum(EditorFormats),
+    content: v.optional(SerializedEditorStateSchema),
+    isCorrupt: v.literal(false),
+    createdAt: v.pipe(
+      v.number(),
+      v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
+    ),
+    updatedAt: v.pipe(
+      v.number(),
+      v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
+    ),
+  }),
+  v.object({
+    id: vTrimNonEmptyString,
+    title: v.unknown(),
+    format: v.unknown(),
+    content: v.unknown(),
+    isCorrupt: v.literal(true),
+    createdAt: v.unknown(),
+    updatedAt: v.unknown(),
+  }),
+]);
+
+export type NoteDto = v.InferOutput<typeof NoteDtoSchema>;
+export type NoteDtoValid = Extract<NoteDto, { isCorrupt: false }>;
+export type NoteDtoCorrupt = Extract<NoteDto, { isCorrupt: true }>;
 
 type GetNoteErrorCode =
   | "NOTE_GET_FAILED"
@@ -38,7 +52,7 @@ export class GetNoteError extends AppError<GetNoteErrorCode> {
 
 export function getNote(
   id: string,
-): Result.ResultAsync<NoteDtoOutput, GetNoteError> {
+): Result.ResultAsync<NoteDto, GetNoteError> {
   return Result.pipe(
     Result.try({
       try: async () => {
@@ -116,10 +130,9 @@ export class SaveNoteError extends AppError<SaveNoteErrorCode> {
   public override readonly name = "SaveNoteError";
 }
 
-export function saveNote(note: NoteDtoOutput): Result.ResultAsync<
-  NoteDtoOutput,
-  SaveNoteError
-> {
+export function saveNote(
+  note: NoteDtoValid,
+): Result.ResultAsync<NoteDtoValid, SaveNoteError> {
   return Result.try({
     try: async () => {
       const metaToSave = {
