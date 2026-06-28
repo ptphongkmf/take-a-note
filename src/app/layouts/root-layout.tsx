@@ -2,12 +2,11 @@ import { Outlet } from "@tanstack/solid-router";
 import { Link } from "@tanstack/solid-router";
 import Icon from "#shared/ui/icon/icon.tsx";
 
-// TODO: remove name on @container/, YAGNI, only use if there is a case where we specifically want to target it
 export default function RootLayout() {
   return (
     <div class="grid w-full auto-rows-auto grid-cols-1">
       <div class="grid min-h-dvh grid-rows-[auto_1fr]">
-        <header class="@container/nav bg-yellow-200 px-[clamp(0.25rem,4dvi,3rem)] py-1 text-2xl text-walnut">
+        <header class="@container bg-yellow-200 px-[clamp(0.25rem,4dvi,3rem)] py-1 text-2xl text-walnut">
           <Link
             to="/"
             class="inline-block font-pencil text-fluid-4xl font-bold transition-all duration-200 hover:scale-105 hover:rotate-3 hover:text-amber-800"
@@ -16,12 +15,12 @@ export default function RootLayout() {
           </Link>
         </header>
 
-        <main class="@container/main w-full bg-background">
+        <main class="@container w-full bg-background">
           <Outlet />
         </main>
       </div>
 
-      <footer class="@container/footer grid grid-cols-2 items-center bg-amber-200 px-[clamp(0.25rem,2dvi,3rem)] py-1 text-fluid-xs">
+      <footer class="@container grid grid-cols-2 items-center bg-amber-200 px-[clamp(0.25rem,2dvi,3rem)] py-1 text-fluid-xs">
         <p class="justify-self-start">Copyright © 2026 PTPhongKMF</p>
 
         <section class="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 justify-self-end">
