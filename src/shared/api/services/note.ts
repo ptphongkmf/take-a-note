@@ -204,24 +204,31 @@ export class GarbageCollectNoteError
 }
 
 const GC_BATCH_SIZE = 2500;
-const GC_MINIMUM_AGE = Temporal.Duration.from({ minutes: 0 }).total(
-  "milliseconds",
-);
+const GC_MINIMUM_AGE = 24 * 60 * 60 * 1000;
 
-export function gcNote(lastProcessedId?: string) {
+export interface GcState {
+  lastMetaId?: string;
+  lastContentId?: string;
+}
+
+export function gcNote(state: GcState = {}) {
   return Result.try({
     try: async () => {
       const db = idbClient();
-
       const tx = db.transaction(["note_meta", "note_content"], "readwrite");
+
       const metaStore = tx.objectStore("note_meta");
       const contentStore = tx.objectStore("note_content");
 
-      const range = lastProcessedId
-        ? IDBKeyRange.lowerBound(lastProcessedId, true)
+      const MAX_META_SWEEP = Math.floor(GC_BATCH_SIZE / 2);
+      const MAX_CONTENT_SWEEP = Math.floor(GC_BATCH_SIZE / 2);
+
+      // SWEEP `note_meta` (Find empty, old, untouched notes)
+      const metaRange = state.lastMetaId
+        ? IDBKeyRange.lowerBound(state.lastMetaId, true)
         : undefined;
 
-      let cursor = await metaStore.openCursor(range)
+      let metaCursor = await metaStore.openCursor(metaRange)
         .catch((e) => {
           throw new IdbOperationError({
             action: "read",
@@ -230,19 +237,16 @@ export function gcNote(lastProcessedId?: string) {
           });
         });
 
-      let processedCount = 0;
-      let latestId = lastProcessedId;
+      let metaProcessedCount = 0;
+      let latestMetaId = state.lastMetaId;
 
-      // Process the batch
-      while (cursor && processedCount < GC_BATCH_SIZE) {
-        const meta = cursor.value;
-        latestId = meta.id;
+      while (metaCursor && metaProcessedCount < MAX_META_SWEEP) {
+        const meta = metaCursor.value;
+        latestMetaId = meta.id;
 
         const isTitleEmpty = meta.title.trim() === "";
         const isUntouched = meta.createdAt === meta.updatedAt;
-        const isOldEnough =
-          (Temporal.Now.instant().epochMilliseconds - meta.createdAt) >
-            GC_MINIMUM_AGE;
+        const isOldEnough = (Date.now() - meta.createdAt) > GC_MINIMUM_AGE;
 
         if (isTitleEmpty && isUntouched && isOldEnough) {
           const contentRecord = await contentStore.get(meta.id)
@@ -253,28 +257,57 @@ export function gcNote(lastProcessedId?: string) {
                 cause: e,
               });
             });
+
           if (!contentRecord?.content) {
-            await cursor.delete()
-              .catch((e) => {
-                throw new IdbOperationError({
-                  action: "delete",
-                  store: "note_meta",
-                  cause: e,
-                });
+            await metaCursor.delete().catch((e) => {
+              throw new IdbOperationError({
+                action: "delete",
+                store: "note_meta",
+                cause: e,
               });
-            await contentStore.delete(meta.id)
-              .catch((e) => {
-                throw new IdbOperationError({
-                  action: "delete",
-                  store: "note_content",
-                  cause: e,
-                });
+            });
+            await contentStore.delete(meta.id).catch((e) => {
+              throw new IdbOperationError({
+                action: "delete",
+                store: "note_content",
+                cause: e,
               });
+            });
           }
         }
 
-        processedCount++;
-        cursor = await cursor.continue()
+        metaProcessedCount++;
+        metaCursor = await metaCursor.continue().catch((e) => {
+          throw new IdbOperationError({
+            action: "read",
+            store: "note_meta",
+            cause: e,
+          });
+        });
+      }
+
+      // SWEEP `note_content` (Find orphaned content)
+      const contentRange = state.lastContentId
+        ? IDBKeyRange.lowerBound(state.lastContentId, true)
+        : undefined;
+
+      let contentCursor = await contentStore.openCursor(contentRange)
+        .catch((e) => {
+          throw new IdbOperationError({
+            action: "read",
+            store: "note_content",
+            cause: e,
+          });
+        });
+
+      let contentProcessedCount = 0;
+      let latestContentId = state.lastContentId;
+
+      while (contentCursor && contentProcessedCount < MAX_CONTENT_SWEEP) {
+        const contentKey = contentCursor.key;
+        latestContentId = contentKey;
+
+        const parentMetaKey = await metaStore.getKey(contentKey)
           .catch((e) => {
             throw new IdbOperationError({
               action: "read",
@@ -282,22 +315,45 @@ export function gcNote(lastProcessedId?: string) {
               cause: e,
             });
           });
+
+        if (parentMetaKey === undefined) {
+          await contentCursor.delete().catch((e) => {
+            throw new IdbOperationError({
+              action: "delete",
+              store: "note_content",
+              cause: e,
+            });
+          });
+        }
+
+        contentProcessedCount++;
+        contentCursor = await contentCursor.continue().catch((e) => {
+          throw new IdbOperationError({
+            action: "read",
+            store: "note_content",
+            cause: e,
+          });
+        });
       }
 
       await tx.done;
 
-      return cursor ? latestId : undefined;
+      return {
+        lastMetaId: metaCursor ? latestMetaId : undefined,
+        lastContentId: contentCursor ? latestContentId : undefined,
+      };
     },
+
     catch: (e) => {
       const idbError = e instanceof IdbOperationError
         ? e
         : new IdbOperationError(
-          'Unknown error occurred while querying "note_meta" and "note_content" object store',
+          "Unknown error occurred while performing garbage collection",
           { code: "IDB_UNKNOWN_FAILURE", cause: e },
         );
 
       return new GarbageCollectNoteError(
-        "Failed to save the note to IndexedDB",
+        "Failed to garbage collect notes in IndexedDB",
         { code: "NOTE_GC_FAILED", cause: idbError },
       );
     },

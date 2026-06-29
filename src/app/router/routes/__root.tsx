@@ -8,6 +8,7 @@ import { queryClient } from "#shared/api/query-client.ts";
 import { onMount } from "solid-js";
 import { gcNote } from "#shared/api/services/note.ts";
 import { Result } from "@praha/byethrow";
+import type { GcState } from "#shared/api/services/note.ts";
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
@@ -15,24 +16,25 @@ export const Route = createRootRoute({
   },
   component: () => {
     onMount(() => {
-      async function runNoteGarbageCollector(startId?: string) {
-        console.log("gb ran");
-        const gcResult = await gcNote(startId);
+      async function runNoteGarbageCollector(state: GcState = {}) {
+        const gcResult = await gcNote(state);
 
         if (Result.isFailure(gcResult)) {
-          // TODO: call toast here
+          // TODO: remove log and call toast here
           console.log("error?: " + gcResult.error);
           return;
         }
 
-        const nextId = Result.unwrap(gcResult);
-        if (nextId) {
-          globalThis.requestIdleCallback(() => runNoteGarbageCollector(nextId));
+        const nextState = Result.unwrap(gcResult);
+        if (nextState.lastMetaId || nextState.lastContentId) {
+          globalThis.requestIdleCallback(() =>
+            runNoteGarbageCollector(nextState)
+          );
         }
         // else, no more batches!
       }
 
-      // globalThis.requestIdleCallback(() => runNoteGarbageCollector());
+      globalThis.requestIdleCallback(() => runNoteGarbageCollector());
     });
 
     return (
