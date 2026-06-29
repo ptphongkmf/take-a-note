@@ -41,10 +41,7 @@ export type NoteDto = v.InferOutput<typeof NoteDtoSchema>;
 export type NoteDtoValid = Extract<NoteDto, { isCorrupt: false }>;
 export type NoteDtoCorrupt = Extract<NoteDto, { isCorrupt: true }>;
 
-type GetNoteErrorCode =
-  | "NOTE_GET_FAILED"
-  | "NOTE_NOT_FOUND"
-  | "NOTE_VALIDATION_FAILED";
+type GetNoteErrorCode = "NOTE_GET_FAILED" | "NOTE_NOT_FOUND";
 
 export class GetNoteError extends AppError<GetNoteErrorCode> {
   public override readonly name = "GetNoteError";
@@ -100,7 +97,7 @@ export function getNote(
       },
     }),
     Result.andThen(({ meta, content }) => {
-      if (meta === undefined && content === undefined) {
+      if (meta === undefined) {
         return Result.fail(
           new GetNoteError(`Note with id "${id}" not found`, {
             code: "NOTE_NOT_FOUND",
@@ -110,16 +107,14 @@ export function getNote(
 
       return Result.succeed({ ...meta, content: content?.content });
     }),
-    Result.andThen((noteDto) => safeParse(NoteDtoSchema, noteDto)),
-    Result.mapError((e) => {
-      if (e.name === "ValidationError") {
-        return new GetNoteError(
-          "Failed to retrieve the note from IndexedDB",
-          { code: "NOTE_VALIDATION_FAILED", cause: e },
-        );
+    Result.andThen((noteDto) => {
+      const result = safeParse(NoteDtoSchema, noteDto);
+
+      if (Result.isFailure(result)) {
+        return Result.succeed({ ...noteDto, isCorrupt: true });
       }
 
-      return e;
+      return result;
     }),
   );
 }
