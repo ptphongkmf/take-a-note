@@ -180,7 +180,7 @@ export default function NoteEditor(props: NoteEditorProps) {
         >
           <EditorInput
             placeholder="Note content..."
-            class="rounded-sm border-amber-600 px-12 py-4 text-base outline-none"
+            class="rounded-sm border-amber-600 px-12 py-1 text-base outline-none"
           />
         </Editor>
       </div>

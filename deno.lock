@@ -4,8 +4,6 @@
     "jsr:@ryu/deno-lint-plugin-tailwindcss@0.2.0": "0.2.0",
     "jsr:@std/async@^1.3.0": "1.3.0",
     "jsr:@std/data-structures@^1.0.11": "1.0.11",
-    "jsr:@std/regexp@^1.0.2": "1.0.2",
-    "jsr:@std/text@^1.0.18": "1.0.18",
     "jsr:@std/ulid@1": "1.0.0",
     "jsr:@valibot/valibot@^1.3.1": "1.3.1",
     "npm:@deno/vite-plugin@^2.0.2": "2.0.2_vite@8.0.3__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2",
@@ -23,6 +21,7 @@
     "npm:clsx@^2.1.1": "2.1.1",
     "npm:idb@^8.0.3": "8.0.3",
     "npm:lexical@0.39": "0.39.0",
+    "npm:scule@^1.3.0": "1.3.0",
     "npm:solid-js@^1.9.12": "1.9.12",
     "npm:tailwind-merge@^3.5.0": "3.5.0",
     "npm:tailwindcss@^4.3.0": "4.3.0",
@@ -44,15 +43,6 @@
     },
     "@std/data-structures@1.0.11": {
       "integrity": "53b98ed7efa61f107dfc14244bd2ec5557f7f7ee0bbaef6d449d7937facacb89"
-    },
-    "@std/regexp@1.0.2": {
-      "integrity": "7493d47c077cfdb023e41a0b44fd608d87fe5b36fc3dc614261afc0f1452aabf"
-    },
-    "@std/text@1.0.18": {
-      "integrity": "d199e516f80599813c64fd4aee5b8f26f6f7d1e1434c88fd153aeea6fea6a9b9",
-      "dependencies": [
-        "jsr:@std/regexp"
-      ]
     },
     "@std/ulid@1.0.0": {
       "integrity": "d41c3d27a907714413649fee864b7cde8d42ee68437d22b79d5de4f81d808780"
@@ -1746,6 +1736,9 @@
       ],
       "bin": true
     },
+    "scule@1.3.0": {
+      "integrity": "sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g=="
+    },
     "semver@6.3.1": {
       "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",
       "bin": true
@@ -1959,7 +1952,6 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/async@^1.3.0",
-      "jsr:@std/text@^1.0.18",
       "jsr:@std/ulid@1",
       "jsr:@valibot/valibot@^1.3.1",
       "npm:@deno/vite-plugin@^2.0.2",
@@ -1977,6 +1969,7 @@
       "npm:clsx@^2.1.1",
       "npm:idb@^8.0.3",
       "npm:lexical@0.39",
+      "npm:scule@^1.3.0",
       "npm:solid-js@^1.9.12",
       "npm:tailwind-merge@^3.5.0",
       "npm:tailwindcss@^4.3.0",

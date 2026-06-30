@@ -10,8 +10,7 @@ import {
   SelectValue,
 } from "#shared/ui/select/solidui-select.tsx";
 import { type EditorFormat, EditorFormats } from "#shared/editor/schema.ts";
-import { toPascalCase } from "@std/text";
-// import { toTitleCase } from "@std/text/unstable-to-title-case";
+import { titleCase } from "scule";
 import { c } from "#shared/lib/class-merger/c.ts";
 
 interface NoteFormatSwitcherProps
@@ -27,14 +26,14 @@ export default function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
     <Select
       value={local.value}
       onChange={(val) => local.onInput(val ?? "plain-text")}
-      options={[...Object.values(EditorFormats), "test-wrong-value"]}
+      options={Object.values(EditorFormats)}
       placeholder="Select"
       itemComponent={(props) => (
         <SelectItem
           item={props.item}
           class="cursor-pointer gap-2 text-fluid-sm hover:bg-amber-200 active:bg-amber-200"
         >
-          {toPascalCase(props.item.rawValue)}
+          {titleCase(props.item.rawValue)}
         </SelectItem>
       )}
       class={c(
@@ -50,11 +49,11 @@ export default function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
 
       <SelectTrigger
         aria-label="Fruit"
-        class="h-fit w-full cursor-pointer gap-2 rounded-none border-0 border-b-3 border-transparent bg-transparent p-2 py-1 text-fluid-sm 
+        class="h-fit w-full cursor-pointer gap-2 rounded-none border-0 border-b-3 border-transparent bg-transparent p-2 py-1 text-fluid-sm font-medium 
                   focus:border-amber-600 focus:ring-0 focus:ring-offset-0 focus:outline-3"
       >
         <SelectValue<string>>
-          {(state) => toPascalCase(state.selectedOption())}
+          {(state) => titleCase(state.selectedOption())}
         </SelectValue>
       </SelectTrigger>
       <SelectContent class="border-amber-600 bg-paper-editor" />
