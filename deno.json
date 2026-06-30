@@ -43,6 +43,7 @@
     "solid-js": "npm:solid-js@^1.9.12",
     "tailwind-merge": "npm:tailwind-merge@^3.5.0",
     "tailwindcss": "npm:tailwindcss@^4.3.0",
+    "tw-animate-css": "npm:tw-animate-css@^1.4.0",
     "type-fest": "npm:type-fest@^5.6.0",
     "vite": "npm:vite@^8.0.3",
     "vite-plugin-icons-spritesheet": "npm:vite-plugin-icons-spritesheet@^3.0.1",
