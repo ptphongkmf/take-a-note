@@ -67,7 +67,7 @@ export function createNoteDirtyState(params: NoteDirtyStateParams) {
         params.editorState(),
         params.latestSerializedState(),
       );
-    }),
+    }, { defer: true }),
   );
 
   onCleanup(() => checkIsDirtyDebounced.clear());
