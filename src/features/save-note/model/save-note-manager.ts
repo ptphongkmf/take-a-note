@@ -46,6 +46,8 @@ export default function createSaveNoteManager(params: SaveNoteManagerParams) {
   createEffect(on(() => [params.lastChangedAt(), params.isDirty()], () => {
     if (params.isDirty()) {
       debouncedSave();
+    } else {
+      debouncedSave.clear();
     }
   }));
 

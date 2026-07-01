@@ -76,7 +76,7 @@ export function Editor(props: EditorProps) {
           </div>
 
           <HistoryPlugin />
-          <OnChangePlugin onChange={handleEditorChange} />
+          <OnChangePlugin ignoreSelectionChange onChange={handleEditorChange} />
         </LexicalComposer>
       )}
     </Show>

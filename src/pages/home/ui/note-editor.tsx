@@ -91,7 +91,6 @@ export default function NoteEditor(props: NoteEditorProps) {
     lastChangedAt: lastChangedAt,
     triggerFormSubmit: () => submit(noteForm),
     onSaveSuccess: (savedNote: NoteDtoValid) => {
-      console.log("Note saved success ran");
       batch(() => {
         reset(noteForm, {
           initialInput: { ...savedNote },
