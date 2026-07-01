@@ -12,6 +12,10 @@ import type { GcState } from "#shared/api/services/note.ts";
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
+    if (!globalThis.Temporal) {
+      await import("temporal-polyfill/global");
+    }
+
     await initIndexedDB();
   },
   component: () => {
