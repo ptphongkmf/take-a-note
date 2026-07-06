@@ -15,7 +15,7 @@ export default function RootLayout() {
           </Link>
         </header>
 
-        <main class="@container w-full bg-background">
+        <main class="@container w-full bg-paper-aged">
           <Outlet />
         </main>
       </div>
