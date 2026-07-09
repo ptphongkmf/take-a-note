@@ -8,8 +8,6 @@
 
 @theme {
   --font-pencil: "PENCIL SHARP", var(--font-sans);
-  --font-test: "Shantell Sans", var(--font-sans);
-  --font-mali: "Mali", var(--font-sans);
 }
 
 @theme {

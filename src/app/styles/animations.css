@@ -20,4 +20,39 @@
     from { opacity: 1; transform: scale(1); }
     to { opacity: 0; transform: scale(0.96); }
   }
+
+  --animate-mui-rotate: mui-rotate 1.4s linear infinite;
+  --animate-mui-dash: mui-dash 1.4s ease-in-out infinite;
+
+  @keyframes mui-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes mui-dash {
+    0% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -15px;
+    }
+    100% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -125px;
+    }
+  }
+
+  --animate-shake: shake 0.35s ease-in-out;
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+  }
 }

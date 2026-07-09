@@ -7,6 +7,8 @@ export const iconNames = [
   "cloud-sync",
   "cloud-check",
   "cloud-alert",
+  "clipboard-x",
+  "clipboard-check",
   "bug",
 ] as const
 
