@@ -17,7 +17,7 @@ class ValidationError extends AppError<"VALIDATION_FAILED"> {
 }
 
 // sync schema
-export function safeParse<
+export function parseResult<
   TSchema extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
 >(
   schema: TSchema,
@@ -25,14 +25,14 @@ export function safeParse<
 ): Result.Result<v.InferOutput<TSchema>, ValidationError>;
 
 // async schema
-export function safeParse<
+export function parseResult<
   TSchema extends v.BaseSchemaAsync<unknown, unknown, v.BaseIssue<unknown>>,
 >(
   schema: TSchema,
   input: unknown,
 ): Result.ResultAsync<v.InferOutput<TSchema>, ValidationError>;
 
-export function safeParse(
+export function parseResult(
   schema:
     | v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>
     | v.BaseSchemaAsync<unknown, unknown, v.BaseIssue<unknown>>,
