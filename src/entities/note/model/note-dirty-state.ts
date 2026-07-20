@@ -2,7 +2,7 @@ import { createEffect, createSignal, on, onCleanup } from "solid-js";
 import type { Accessor } from "solid-js";
 import { debounce } from "@std/async";
 import type { EditorState } from "lexical";
-import { jsonStringify } from "#shared/lib/json/json-stringify.ts";
+import { stringifyJson } from "#shared/lib/json/stringify.ts";
 import { Result } from "@praha/byethrow";
 
 interface NoteDirtyStateParams {
@@ -24,7 +24,7 @@ export function createNoteDirtyState(params: NoteDirtyStateParams) {
   ) {
     setIsDirty(
       isNoteMetaDirty ||
-        Result.unwrap(jsonStringify(current)) !== latestSerialized,
+        Result.unwrap(stringifyJson(current)) !== latestSerialized,
     );
   }
 

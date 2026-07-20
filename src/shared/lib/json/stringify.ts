@@ -31,7 +31,7 @@ type StringifyResult<T> = T extends Unstringifiable ? undefined
  * If the input can be undefined/symbol, the return type includes undefined.
  * Otherwise, it's guaranteed to be a string.
  */
-export function jsonStringify<T>(
+export function stringifyJson<T>(
   value: T,
   replacer?:
     | ((this: unknown, key: string, value: unknown) => unknown)
@@ -40,9 +40,13 @@ export function jsonStringify<T>(
   space?: string | number,
 ): Result.Result<StringifyResult<T>, JsonStringifyError> {
   return Result.try({
-    try: () =>
-      // deno-lint-ignore no-explicit-any
-      JSON.stringify(value, replacer as any, space) as StringifyResult<T>,
-    catch: () => new JsonStringifyError(),
+    try: () => {
+      if (typeof replacer === "function") {
+        return JSON.stringify(value, replacer, space) as StringifyResult<T>;
+      }
+
+      return JSON.stringify(value, replacer, space) as StringifyResult<T>;
+    },
+    catch: (e) => new JsonStringifyError(undefined, { cause: e }),
   });
 }

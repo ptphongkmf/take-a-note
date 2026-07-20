@@ -17,7 +17,7 @@ import NoteFormatSwitcher from "#features/switch-note-format/ui/note-format-swit
 import { EditorFormats } from "#shared/editor/schema.ts";
 import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
 import SaveStatusIndicator from "#features/save-note/ui/save-status-indicator.tsx";
-import { jsonStringify } from "#shared/lib/json/json-stringify.ts";
+import { stringifyJson } from "#shared/lib/json/stringify.ts";
 import { vTemporalInstant } from "#shared/lib/schema/datetime.ts";
 import { Result } from "@praha/byethrow";
 import { createNoteDirtyState } from "#entities/note/model/note-dirty-state.ts";
@@ -60,7 +60,7 @@ export default function NoteEditor(props: NoteEditorProps) {
   );
 
   const [latestSerializedNoteContent, setLatestSerializedNoteContent] =
-    createSignal(Result.unwrap(jsonStringify(local.note?.content)));
+    createSignal(Result.unwrap(stringifyJson(local.note?.content)));
   const [noteContent, setNoteContent] = createSignal<EditorState>();
 
   const noteForm = createForm({
@@ -101,7 +101,7 @@ export default function NoteEditor(props: NoteEditorProps) {
         });
 
         setLatestSerializedNoteContent(
-          Result.unwrap(jsonStringify(savedNote.content)),
+          Result.unwrap(stringifyJson(savedNote.content)),
         );
       });
 
