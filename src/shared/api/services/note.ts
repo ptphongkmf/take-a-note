@@ -1,7 +1,7 @@
 import { idbClient } from "#shared/storage/idb/idb-client.ts";
 import { Result } from "@praha/byethrow";
 import { IdbOperationError } from "#shared/storage/idb/errors.ts";
-import { parseResult } from "#shared/lib/schema/parse.ts";
+import { parseSchema } from "#shared/lib/schema/parse.ts";
 import { AppError } from "#shared/lib/errors/app-error.ts";
 import * as v from "@valibot/valibot";
 import {
@@ -108,7 +108,7 @@ export function getNote(
       return Result.succeed({ ...meta, content: content?.content });
     }),
     Result.andThen((noteDto) => {
-      const result = parseResult(NoteDtoSchema, noteDto);
+      const result = parseSchema(NoteDtoSchema, noteDto);
 
       if (Result.isFailure(result)) {
         return Result.succeed({ ...noteDto, isCorrupt: true });

@@ -17,7 +17,7 @@ class ValidationError extends AppError<"VALIDATION_FAILED"> {
 }
 
 // sync schema
-export function parseResult<
+export function parseSchema<
   TSchema extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
 >(
   schema: TSchema,
@@ -25,14 +25,14 @@ export function parseResult<
 ): Result.Result<v.InferOutput<TSchema>, ValidationError>;
 
 // async schema
-export function parseResult<
+export function parseSchema<
   TSchema extends v.BaseSchemaAsync<unknown, unknown, v.BaseIssue<unknown>>,
 >(
   schema: TSchema,
   input: unknown,
 ): Result.ResultAsync<v.InferOutput<TSchema>, ValidationError>;
 
-export function parseResult(
+export function parseSchema(
   schema:
     | v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>
     | v.BaseSchemaAsync<unknown, unknown, v.BaseIssue<unknown>>,
@@ -40,31 +40,13 @@ export function parseResult(
 ):
   | Result.Result<unknown, ValidationError>
   | Result.ResultAsync<unknown, ValidationError> {
-  if (!schema.async) {
-    const result = v.safeParse(schema, input);
-
-    if (!result.success) {
-      return Result.fail(
-        new ValidationError("TODO: create a prettyfy error fn", {
-          cause: new v.ValiError(result.issues),
-        }),
-      );
-    }
-
-    return Result.succeed(result.output);
-  } else {
-    const resultPromise = v.safeParseAsync(schema, input).then((result) => {
-      if (!result.success) {
-        return Result.fail(
-          new ValidationError("TODO: create a prettyfy error fn", {
-            cause: new v.ValiError(result.issues),
-          }),
-        );
-      }
-
-      return Result.succeed(result.output);
-    });
-
-    return resultPromise;
-  }
+  return Result.try({
+    try: () =>
+      schema.async ? v.parseAsync(schema, input) : v.parse(schema, input),
+    catch: (e) =>
+      new ValidationError(
+        v.isValiError(e) ? "TODO: create a prettyfy error fn" : undefined,
+        { cause: e },
+      ),
+  });
 }
