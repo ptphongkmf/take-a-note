@@ -15,9 +15,9 @@ export default function RootLayout() {
           </Link>
         </header>
 
-        <main class="@container w-full bg-paper-aged">
+        <div class="@container w-full bg-paper-aged">
           <Outlet />
-        </main>
+        </div>
       </div>
 
       <footer class="@container grid grid-cols-2 items-center bg-amber-200 px-[clamp(0.25rem,2dvi,3rem)] py-1 text-vp-xs">
