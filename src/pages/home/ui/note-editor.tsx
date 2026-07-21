@@ -28,7 +28,7 @@ import createSaveNoteManager from "#features/save-note/model/save-note-manager.t
 import { createSmoothSavingState } from "#features/save-note/model/smooth-saving-state.ts";
 import { batch } from "solid-js";
 import { useQueryClient } from "@tanstack/solid-query";
-import { noteDetailQuery } from "#entities/note/api/queries/note-detail-query.ts";
+import { noteDetailQueryFactory } from "#entities/note/api/queries/note-detail-query.ts";
 
 interface NoteEditorProps extends
   Omit<
@@ -106,7 +106,7 @@ export default function NoteEditor(props: NoteEditorProps) {
       });
 
       queryClient.setQueryData(
-        noteDetailQuery.detail(savedNote.id).queryKey,
+        noteDetailQueryFactory.detail(savedNote.id).queryKey,
         savedNote,
       );
     },

@@ -9,6 +9,11 @@ export const EditorFormats = {
 
 export type EditorFormat = typeof EditorFormats[keyof typeof EditorFormats];
 
+export const EditorFormatsSafeSchema = v.fallback(
+  v.enum(EditorFormats),
+  EditorFormats.plaintext,
+);
+
 // export const LexicalEditorAstSchema = v.object({
 //   root: v.object({
 //     type: v.literal("root"),

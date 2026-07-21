@@ -9,31 +9,57 @@ import {
   SerializedEditorStateSchema,
 } from "#shared/editor/schema.ts";
 import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
+import { parseTemporal } from "#shared/lib/datetime/parse.ts";
 
-const NoteDtoSchema = v.variant("isCorrupt", [
+const NoteMetaDtoSchema = v.variant("isCorrupt", [
   v.object({
     id: vTrimNonEmptyString,
     title: v.string(),
     format: v.enum(EditorFormats),
-    content: v.optional(SerializedEditorStateSchema),
     isCorrupt: v.literal(false),
     createdAt: v.pipe(
       v.number(),
-      v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
+      v.transform((input) =>
+        Result.unwrap(
+          parseTemporal(() => Temporal.Instant.fromEpochMilliseconds(input)),
+        )
+      ),
     ),
     updatedAt: v.pipe(
       v.number(),
-      v.transform((input) => Temporal.Instant.fromEpochMilliseconds(input)),
+      v.transform((input) =>
+        Result.unwrap(
+          parseTemporal(() => Temporal.Instant.fromEpochMilliseconds(input)),
+        )
+      ),
     ),
   }),
   v.object({
     id: vTrimNonEmptyString,
     title: v.unknown(),
     format: v.unknown(),
-    content: v.unknown(),
     isCorrupt: v.literal(true),
     createdAt: v.unknown(),
     updatedAt: v.unknown(),
+  }),
+]);
+
+type NoteMetaDto = v.InferOutput<typeof NoteMetaDtoSchema>;
+
+const NoteContentDtoSchema = v.object({
+  content: v.optional(SerializedEditorStateSchema),
+});
+
+type NoteContentDto = v.InferOutput<typeof NoteContentDtoSchema>;
+
+const NoteDtoSchema = v.variant("isCorrupt", [
+  v.object({
+    ...NoteMetaDtoSchema.options[0].entries,
+    ...NoteContentDtoSchema.entries,
+  }),
+  v.object({
+    ...NoteMetaDtoSchema.options[1].entries,
+    content: v.unknown(),
   }),
 ]);
 
@@ -107,14 +133,82 @@ export function getNote(
 
       return Result.succeed({ ...meta, content: content?.content });
     }),
-    Result.andThen((noteDto) => {
+    Result.map((noteDto) => {
       const result = parseSchema(NoteDtoSchema, noteDto);
 
       if (Result.isFailure(result)) {
-        return Result.succeed({ ...noteDto, isCorrupt: true });
+        return { ...noteDto, isCorrupt: true };
       }
 
-      return result;
+      return result.value;
+    }),
+  );
+}
+
+type ListNotesErrorCode = "NOTE_LIST_FAILED";
+
+export class ListNotesError extends AppError<ListNotesErrorCode> {
+  public override readonly name = "ListNotesError";
+}
+
+export type listNoteFiltersOpts = {
+  search?: string;
+};
+
+export function listNotes(
+  _filters?: listNoteFiltersOpts,
+): Result.ResultAsync<NoteMetaDto[], ListNotesError> {
+  return Result.pipe(
+    Result.try({
+      try: async () => {
+        const db = idbClient();
+
+        const tx = db.transaction("note_meta", "readonly");
+
+        const metaList = await tx.objectStore("note_meta").getAll()
+          .catch((e) => {
+            throw new IdbOperationError({
+              action: "read",
+              store: "note_meta",
+              cause: e,
+            });
+          });
+
+        return metaList;
+      },
+      catch: (e) => {
+        const idbError = e instanceof IdbOperationError
+          ? e
+          : new IdbOperationError(
+            'Unknown error occurred while querying "note_meta" object store',
+            { code: "IDB_UNKNOWN_FAILURE", cause: e },
+          );
+
+        return new ListNotesError(
+          "Failed to retrieve the notes list from IndexedDB",
+          { code: "NOTE_LIST_FAILED", cause: idbError },
+        );
+      },
+    }),
+    Result.map((metaList) => {
+      const validatedList: NoteMetaDto[] = [];
+
+      for (const meta of metaList) {
+        const result = parseSchema(NoteMetaDtoSchema, meta);
+
+        if (Result.isSuccess(result)) {
+          validatedList.push(result.value);
+        } else {
+          if (meta.id && typeof meta.id === "string") {
+            validatedList.push({ ...meta, isCorrupt: true });
+          } else {
+            // ignore the record if it doesn't have a valid id, as we cannot reference it later
+            // TODO: warn or log error or do something about it? should we even nortify user?
+          }
+        }
+      }
+
+      return validatedList;
     }),
   );
 }

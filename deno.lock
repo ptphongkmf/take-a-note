@@ -15,6 +15,7 @@
     "npm:@ryotarofr/lexical-solid@0.39": "0.39.0_solid-js@1.9.12_utility-types@3.11.0_yjs@13.6.30",
     "npm:@tailwindcss/vite@^4.2.3": "4.2.3_vite@8.0.3__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2",
     "npm:@tanstack/router-plugin@^1.167.22": "1.167.22_vite@8.0.3__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2_vite-plugin-solid@2.11.11__solid-js@1.9.12__vite@8.0.3___@emnapi+core@1.9.2___@emnapi+runtime@1.9.2__@emnapi+core@1.9.2__@emnapi+runtime@1.9.2",
+    "npm:@tanstack/solid-query@*": "5.100.10_solid-js@1.9.12",
     "npm:@tanstack/solid-query@^5.100.10": "5.100.10_solid-js@1.9.12",
     "npm:@tanstack/solid-router@^1.168.20": "1.168.20_solid-js@1.9.12",
     "npm:class-variance-authority@~0.7.1": "0.7.1",
