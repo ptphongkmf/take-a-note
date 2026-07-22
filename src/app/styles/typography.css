@@ -12,9 +12,9 @@
 
 @theme {
   /* 
-    FLUID CONTAINER TEXT SCALE (fxs -> f9xl)
-    Min Container: 280px (17.5rem)
-    Max Container: 800px (50rem)
+    FLUID TEXT SCALE (fxs -> f9xl)
+    Min: 320px (20rem)
+    Max: 1280px (80rem)
 
     Use https://utopia.fyi/ to calculate fluid typography clamp() values
   */
@@ -24,70 +24,50 @@
   --text-fluid-xs--line-height: calc(1 / 0.75);
 
   /* sm: 12px ➝ 14px */
-  --text-fluid-sm: clamp(0.75rem, 0.683rem + 0.385cqi, 0.875rem);
+  --text-fluid-sm: clamp(0.75rem, 0.7083rem + 0.2083vi, 0.875rem);
   --text-fluid-sm--line-height: calc(1.25 / 0.875);
 
   /* base: 14px ➝ 16px */
-  --text-fluid-base: clamp(0.875rem, 0.808rem + 0.385cqi, 1rem);
+  --text-fluid-base: clamp(0.875rem, 0.8333rem + 0.2083vi, 1rem);
   --text-fluid-base--line-height: calc(1.5 / 1);
 
   /* lg: 16px ➝ 18px */
-  --text-fluid-lg: clamp(1rem, 0.933rem + 0.385cqi, 1.125rem);
+  --text-fluid-lg: clamp(1rem, 0.9583rem + 0.2083vi, 1.125rem);
   --text-fluid-lg--line-height: calc(1.75 / 1.125);
 
   /* xl: 18px ➝ 20px */
-  --text-fluid-xl: clamp(1.125rem, 1.058rem + 0.385cqi, 1.25rem);
+  --text-fluid-xl: clamp(1.125rem, 1.0833rem + 0.2083vi, 1.25rem);
   --text-fluid-xl--line-height: calc(1.75 / 1.25);
 
   /* 2xl: 20px ➝ 24px */
-  --text-fluid-2xl: clamp(1.25rem, 1.115rem + 0.769cqi, 1.5rem);
+  --text-fluid-2xl: clamp(1.25rem, 1.1667rem + 0.4167vi, 1.5rem);
   --text-fluid-2xl--line-height: calc(2 / 1.5);
 
   /* 3xl: 24px ➝ 30px */
-  --text-fluid-3xl: clamp(1.5rem, 1.298rem + 1.154cqi, 1.875rem);
+  --text-fluid-3xl: clamp(1.5rem, 1.375rem + 0.625vi, 1.875rem);
   --text-fluid-3xl--line-height: calc(2.25 / 1.875);
 
   /* 4xl: 30px ➝ 36px */
-  --text-fluid-4xl: clamp(1.875rem, 1.673rem + 1.154cqi, 2.25rem);
+  --text-fluid-4xl: clamp(1.875rem, 1.75rem + 0.625vi, 2.25rem);
   --text-fluid-4xl--line-height: calc(2.5 / 2.25);
 
   /* 5xl: 36px ➝ 48px */
-  --text-fluid-5xl: clamp(2.25rem, 1.846rem + 2.308cqi, 3rem);
+  --text-fluid-5xl: clamp(2.25rem, 2rem + 1.25vi, 3rem);
   --text-fluid-5xl--line-height: 1;
 
   /* 6xl: 48px ➝ 60px */
-  --text-fluid-6xl: clamp(3rem, 2.596rem + 2.308cqi, 3.75rem);
+  --text-fluid-6xl: clamp(3rem, 2.75rem + 1.25vi, 3.75rem);
   --text-fluid-6xl--line-height: 1;
 
   /* 7xl: 60px ➝ 72px */
-  --text-fluid-7xl: clamp(3.75rem, 3.346rem + 2.308cqi, 4.5rem);
+  --text-fluid-7xl: clamp(3.75rem, 3.5rem + 1.25vi, 4.5rem);
   --text-fluid-7xl--line-height: 1;
 
   /* 8xl: 72px ➝ 96px */
-  --text-fluid-8xl: clamp(4.5rem, 3.692rem + 4.615cqi, 6rem);
+  --text-fluid-8xl: clamp(4.5rem, 4rem + 2.5vi, 6rem);
   --text-fluid-8xl--line-height: 1;
 
   /* 9xl: 96px ➝ 128px */
-  --text-fluid-9xl: clamp(6rem, 4.923rem + 6.154cqi, 8rem);
+  --text-fluid-9xl: clamp(6rem, 5.3333rem + 3.3333vi, 8rem);
   --text-fluid-9xl--line-height: 1;
-
-  /* 
-    FLUID CONTAINER MACRO TEXT SCALE
-    Min Container: 320px
-    Max Container: 1024px
-
-    The default responsive text size to apply to the whole app
-    Use svi instead of cqi 
-  */
-
-  --text-vp-xs: 0.75rem;
-  --text-vp-xs--line-height: calc(1 / 0.75);
-
-  /* base: 14px ➝ 16px */
-  --text-vp-base: clamp(0.875rem, 0.8182rem + 0.284svi, 1rem);
-  --text-vp-base--line-height: calc(1.5 / 1);
-
-  /* 2xl: 20px ➝ 24px */
-  --text-vp-2xl: clamp(1.25rem, 1.1364rem + 0.5682svi, 1.5rem);
-  --text-vp-2xl--line-height: calc(2 / 1.5);
 }
