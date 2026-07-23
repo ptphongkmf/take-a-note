@@ -25,7 +25,7 @@ import type { NoteDtoValid } from "#shared/api/services/note.ts";
 import { createEffect } from "solid-js";
 import { on } from "solid-js";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
-import { createSmoothSavingState } from "#features/save-note/model/smooth-saving-state.ts";
+
 import { batch } from "solid-js";
 import { useQueryClient } from "@tanstack/solid-query";
 import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
@@ -112,8 +112,6 @@ export default function NoteEditor(props: NoteEditorProps) {
     },
   });
 
-  const isSmoothSaving = createSmoothSavingState(saveManager.isSaving);
-
   createEffect(on(
     () => [
       getInput(noteForm, { path: ["title"] }),
@@ -166,7 +164,7 @@ export default function NoteEditor(props: NoteEditorProps) {
 
           <SaveStatusIndicator
             isDirty={isDirty()}
-            isSaving={isSmoothSaving()}
+            isSaving={saveManager.isSaving()}
           />
         </div>
       </div>

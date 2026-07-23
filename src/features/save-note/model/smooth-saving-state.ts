@@ -6,7 +6,7 @@ import {
   onCleanup,
 } from "solid-js";
 
-interface SmoothSavingOptions {
+export interface SmoothSavingOptions {
   delayMs?: number;
   minDurationMs?: number;
 }

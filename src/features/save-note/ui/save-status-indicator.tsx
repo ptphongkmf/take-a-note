@@ -2,14 +2,26 @@ import { Match, Switch, splitProps } from "solid-js";
 import type { ComponentProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import Icon from "#shared/ui/icon/icon.tsx";
+import {
+  createSmoothSavingState,
+  type SmoothSavingOptions,
+} from "../model/smooth-saving-state.ts";
 
 interface SaveIndicatorProps extends ComponentProps<"div"> {
   isDirty: boolean;
   isSaving: boolean;
+  smoothOptions?: SmoothSavingOptions;
 }
 
 export default function SaveStatusIndicator(props: SaveIndicatorProps) {
-  const [local, others] = splitProps(props, ["class", "isDirty", "isSaving"]);
+  const [local, others] = splitProps(props, [
+    "class",
+    "isDirty",
+    "isSaving",
+    "smoothOptions",
+  ]);
+
+  const isSmoothSaving = createSmoothSavingState(() => local.isSaving, local.smoothOptions)
 
   return (
     <div
@@ -20,7 +32,7 @@ export default function SaveStatusIndicator(props: SaveIndicatorProps) {
       class={c("flex items-center justify-end text-fluid-sm", local.class)}
     >
       <Switch>
-        <Match when={local.isSaving}>
+        <Match when={isSmoothSaving()}>
           <p class="flex animate-pulse items-center justify-center gap-2 font-semibold text-blue-800">
             <Icon name="cloud-sync" />
             <span class="truncate">Saving...</span>
