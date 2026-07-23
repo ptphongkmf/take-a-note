@@ -1,4 +1,4 @@
-import { noteListQueryFactory } from "#entities/note/api/queries/note-list-query.ts";
+import { noteQueryList } from "#entities/note/api/queries/note-list-query.ts";
 import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 import { type ComponentProps, For, splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
@@ -8,7 +8,7 @@ import Icon from "#shared/ui/icon/icon.tsx";
 export default function NoteListAsync(props: ComponentProps<"ul">) {
   const [local, others] = splitProps(props, ["class"]);
 
-  const noteListQuery = useSuspenseQuery(() => noteListQueryFactory.list());
+  const noteListQuery = useSuspenseQuery(() => noteQueryList.list());
 
   return (
     <ul

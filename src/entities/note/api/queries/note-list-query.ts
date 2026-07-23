@@ -4,7 +4,7 @@ import {
   listNotes,
 } from "#shared/api/services/note.ts";
 import { buildQueryKey } from "#shared/lib/tanstack-query/build-key.ts";
-import { noteRootQueryFactory } from "#entities/note/api/queries/note-all-query.ts";
+import { noteQueryRoot } from "#entities/note/api/queries/note-all-query.ts";
 import { queryOptions } from "@tanstack/solid-query";
 import type { NoteList } from "#entities/note/model/types.ts";
 import { safeStringify } from "#shared/lib/string/safe-stringify.ts";
@@ -14,11 +14,11 @@ import { parseTemporal } from "#shared/lib/datetime/parse.ts";
 
 type Failure = Result.InferFailure<typeof listNotes>;
 
-export const noteListQueryFactory = {
-  allList: buildQueryKey({ ...noteRootQueryFactory.all[0], scope: "list" }),
+export const noteQueryList = {
+  allList: buildQueryKey({ ...noteQueryRoot.all[0], scope: "list" }),
   list: (filters?: listNoteFiltersOpts) =>
     queryOptions<NoteList[], Failure>({
-      queryKey: buildQueryKey({ ...noteListQueryFactory.allList[0], filters }),
+      queryKey: buildQueryKey({ ...noteQueryList.allList[0], filters }),
       queryFn: async (_filters) => {
         const result = Result.unwrap(await listNotes());
 

@@ -2,25 +2,25 @@ import { createFileRoute } from "@tanstack/solid-router";
 import Home from "#pages/home/home.tsx";
 import { GetNoteError } from "#shared/api/services/note.ts";
 import { queryClient } from "#shared/api/query-client.ts";
-import { noteDetailQueryFactory } from "#entities/note/api/queries/note-detail-query.ts";
+import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
 import { RouterError } from "#app/router/router.ts";
 import {
   clearLastOpenedNoteId,
   setLastOpenedNoteId,
 } from "#entities/note/api/last-opened-note.ts";
 import { redirect } from "@tanstack/solid-router";
-import { noteListQueryFactory } from "#entities/note/api/queries/note-list-query.ts";
+import { noteQueryList } from "#entities/note/api/queries/note-list-query.ts";
 
 export const Route = createFileRoute("/notes/$id")({
   loader: async ({ params }) => {
-    queryClient.prefetchQuery(noteListQueryFactory.list());
+    queryClient.prefetchQuery(noteQueryList.list());
 
     try {
       const note = await queryClient.ensureQueryData(
-        noteDetailQueryFactory.detail(params.id),
+        noteQueryDetail.detail(params.id),
       );
 
-      setLastOpenedNoteId(note.id);
+      setLastOpenedNoteId(params.id);
 
       return note;
     } catch (e) {

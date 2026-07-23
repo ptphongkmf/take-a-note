@@ -9,7 +9,7 @@ import {
 } from "#shared/ui/sheet/solidui-sheet.tsx";
 import { Show } from "solid-js";
 import Icon from "#shared/ui/icon/icon.tsx";
-import { noteDetailQueryFactory } from "#entities/note/api/queries/note-detail-query.ts";
+import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
 import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 import { getRouteApi } from "@tanstack/solid-router";
 import AsyncBoundary from "#shared/ui/boundary/async-boundry.tsx";
@@ -19,9 +19,7 @@ const HOME_ROUTE = getRouteApi("/notes/$id");
 export default function Home() {
   const params = HOME_ROUTE.useParams();
 
-  const noteQuery = useSuspenseQuery(() =>
-    noteDetailQueryFactory.detail(params().id)
-  );
+  const noteQuery = useSuspenseQuery(() => noteQueryDetail.detail(params().id));
 
   return (
     <div class="grid size-full grid-cols-1 grid-rows-[auto_1fr] gap-2 p-[clamp(0.5rem,2cqi,1rem)] @5xl:grid-cols-[minmax(15rem,1fr)_minmax(26rem,52rem)_minmax(15rem,1fr)] 

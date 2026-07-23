@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/solid-query";
-import { saveNoteMutation } from "#features/save-note/api/save-note-mutation.ts";
+import { noteMutationSave } from "#features/save-note/api/save-note-mutation.ts";
 import type { Accessor } from "solid-js";
 import type { NoteDtoValid } from "#shared/api/services/note.ts";
 import { debounce } from "@std/async/debounce";
@@ -17,7 +17,7 @@ interface SaveNoteManagerParams {
 export default function createSaveNoteManager(params: SaveNoteManagerParams) {
   let pendingSavePayload: NoteDtoValid | undefined = undefined;
 
-  const saveMutation = useMutation(() => saveNoteMutation);
+  const saveMutation = useMutation(() => noteMutationSave);
 
   const debouncedSave = debounce(() => {
     params.triggerFormSubmit();

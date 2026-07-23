@@ -6,7 +6,7 @@ import { type NoteDtoValid, saveNote } from "#shared/api/services/note.ts";
 type Success = Result.InferSuccess<typeof saveNote>;
 type Failure = Result.InferFailure<typeof saveNote>;
 
-export const saveNoteMutation = mutationOptions<
+export const noteMutationSave = mutationOptions<
   Success,
   Failure,
   NoteDtoValid
