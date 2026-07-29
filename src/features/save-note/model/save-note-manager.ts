@@ -43,13 +43,18 @@ export default function createSaveNoteManager(params: SaveNoteManagerParams) {
     });
   }
 
-  createEffect(on(() => [params.lastChangedAt(), params.isDirty()], () => {
-    if (params.isDirty()) {
-      debouncedSave();
-    } else {
-      debouncedSave.clear();
-    }
-  }));
+  createEffect(
+    on(
+      () => [params.lastChangedAt(), params.isDirty()],
+      () => {
+        if (params.isDirty()) {
+          debouncedSave();
+        } else {
+          debouncedSave.clear();
+        }
+      },
+    ),
+  );
 
   createEffect(() => {
     function handleBeforeUnload(e: BeforeUnloadEvent) {

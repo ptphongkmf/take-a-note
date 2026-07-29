@@ -9,17 +9,13 @@ import {
 } from "#shared/ui/sheet/solidui-sheet.tsx";
 import { Show } from "solid-js";
 import Icon from "#shared/ui/icon/icon.tsx";
-import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
-import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 import { getRouteApi } from "@tanstack/solid-router";
 import AsyncBoundary from "#shared/ui/boundary/async-boundry.tsx";
 
 const HOME_ROUTE = getRouteApi("/notes/$id");
 
 export default function Home() {
-  const params = HOME_ROUTE.useParams();
-
-  const noteQuery = useSuspenseQuery(() => noteQueryDetail.detail(params().id));
+  const routeParams = HOME_ROUTE.useParams();
 
   return (
     <div class="grid size-full grid-cols-1 grid-rows-[auto_1fr] gap-2 p-[clamp(0.5rem,2cqi,1rem)] @5xl:grid-cols-[minmax(15rem,1fr)_minmax(26rem,52rem)_minmax(15rem,1fr)] 
@@ -71,12 +67,13 @@ export default function Home() {
 
       <main class="@container @5xl:col-start-2">
         <AsyncBoundary>
-          {/* TODO: add fallback component which is safemode viewer for corrupt note */}
-          <Show
-            when={!noteQuery.data.isCorrupt && noteQuery.data}
-            fallback={<p>Note is corrupt, a safe view mode is WIP</p>}
-          >
-            {(note) => <NoteEditor note={note()} class="size-full" />}
+          <Show when={routeParams().id} keyed>
+            {(id) => (
+              <NoteEditor
+                noteId={id}
+                class="size-full"
+              />
+            )}
           </Show>
         </AsyncBoundary>
       </main>

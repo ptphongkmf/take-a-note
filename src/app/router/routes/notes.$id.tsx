@@ -1,46 +1,19 @@
 import { createFileRoute } from "@tanstack/solid-router";
 import Home from "#pages/home/home.tsx";
-import { GetNoteError } from "#shared/api/services/note.ts";
 import { queryClient } from "#shared/api/query-client.ts";
 import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
-import { RouterError } from "#app/router/router.ts";
-import {
-  clearLastOpenedNoteId,
-  setLastOpenedNoteId,
-} from "#entities/note/api/last-opened-note.ts";
-import { redirect } from "@tanstack/solid-router";
+import { setLastOpenedNoteId } from "#entities/note/api/last-opened-note.ts";
 import { noteQueryList } from "#entities/note/api/queries/note-list-query.ts";
 
 export const Route = createFileRoute("/notes/$id")({
   loader: async ({ params }) => {
     queryClient.prefetchQuery(noteQueryList.list());
 
-    try {
-      const note = await queryClient.ensureQueryData(
-        noteQueryDetail.detail(params.id),
-      );
+    await queryClient.fetchQuery(
+      noteQueryDetail.detailOrDefault(params.id),
+    ).catch(/* ignore */);
 
-      setLastOpenedNoteId(params.id);
-
-      return note;
-    } catch (e) {
-      if (e instanceof GetNoteError && e.code === "NOTE_NOT_FOUND") {
-        // self-recovery, redirect to new notes instantly
-        clearLastOpenedNoteId();
-        throw redirect({
-          to: "/",
-          replace: true,
-        });
-      }
-
-      throw new RouterError(
-        `Unexpected error occurred while loading route: ${Route.path}`,
-        {
-          code: "UNKNOWN_ROUTER_FAILURE",
-          cause: e,
-        },
-      );
-    }
+    setLastOpenedNoteId(params.id);
   },
   component: Home,
 });

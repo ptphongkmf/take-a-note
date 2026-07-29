@@ -7,7 +7,16 @@ import {
   submit,
   useField,
 } from "@formisch/solid";
-import { type ComponentProps, createSignal, splitProps } from "solid-js";
+import {
+  batch,
+  type ComponentProps,
+  createEffect,
+  createSignal,
+  Match,
+  on,
+  splitProps,
+  Switch,
+} from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { Editor, EditorInput } from "#shared/editor/lexical-editor.tsx";
 import * as v from "@valibot/valibot";
@@ -21,16 +30,49 @@ import { stringifyJson } from "#shared/lib/json/stringify.ts";
 import { vTemporalInstant } from "#shared/lib/schema/datetime.ts";
 import { Result } from "@praha/byethrow";
 import { createNoteDirtyState } from "#entities/note/model/note-dirty-state.ts";
-import type { NoteDtoValid } from "#shared/api/services/note.ts";
-import { createEffect } from "solid-js";
-import { on } from "solid-js";
+import type {
+  NoteDtoCorrupt,
+  NoteDtoValid,
+} from "#shared/api/services/note.ts";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
-
-import { batch } from "solid-js";
 import { useQueryClient } from "@tanstack/solid-query";
 import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
+import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 
 interface NoteEditorProps extends
+  Omit<
+    ComponentProps<"form">,
+    "onSubmit" | "children" | "action" | "method" | "onReset"
+  > {
+  noteId: string;
+}
+
+export default function NoteEditor(props: NoteEditorProps) {
+  const [_, others] = splitProps(props, ["noteId"]);
+
+  const noteQuery = useSuspenseQuery(() =>
+    noteQueryDetail.detailOrDefault(props.noteId)
+  );
+
+  return (
+    <Switch>
+      <Match when={noteQuery.data.isCorrupt && noteQuery.data}>
+        {(corruptNote) => (
+          <ViewOnlyNoteEditor
+            {...others}
+            note={corruptNote()}
+          />
+        )}
+      </Match>
+
+      <Match when={!noteQuery.data.isCorrupt && noteQuery.data}>
+        {(note) => <EditableNoteEditor {...others} note={note()} />}
+      </Match>
+    </Switch>
+  );
+}
+
+interface EditableNoteEditorProps extends
   Omit<
     ComponentProps<"form">,
     "onSubmit" | "children" | "action" | "method" | "onReset"
@@ -51,7 +93,7 @@ const NoteFormSchema = v.object({
 });
 type NoteFormOutput = v.InferOutput<typeof NoteFormSchema>;
 
-export default function NoteEditor(props: NoteEditorProps) {
+function EditableNoteEditor(props: EditableNoteEditorProps) {
   const [local, others] = splitProps(props, ["class", "note"]);
   const queryClient = useQueryClient();
 
@@ -60,7 +102,7 @@ export default function NoteEditor(props: NoteEditorProps) {
   );
 
   const [latestSerializedNoteContent, setLatestSerializedNoteContent] =
-    createSignal(Result.unwrap(stringifyJson(local.note?.content)));
+    createSignal(Result.unwrap(stringifyJson(local.note.content)));
   const [noteContent, setNoteContent] = createSignal<EditorState>();
 
   const noteForm = createForm({
@@ -106,7 +148,7 @@ export default function NoteEditor(props: NoteEditorProps) {
       });
 
       queryClient.setQueryData(
-        noteQueryDetail.detail(savedNote.id).queryKey,
+        noteQueryDetail.detailOrDefault(savedNote.id).queryKey,
         savedNote,
       );
     },
@@ -174,7 +216,7 @@ export default function NoteEditor(props: NoteEditorProps) {
       <div class="flex flex-col gap-1.5 text-fluid-sm">
         <Editor
           format={getInput(noteForm, { path: ["format"] }) ?? "plain-text"}
-          initialValue={props.note?.content}
+          initialValue={local.note.content}
           onInput={setNoteContent}
           class="size-full min-h-fit"
         >
@@ -185,5 +227,25 @@ export default function NoteEditor(props: NoteEditorProps) {
         </Editor>
       </div>
     </Form>
+  );
+}
+
+interface ViewOnlyNoteEditorProps extends
+  Omit<
+    ComponentProps<"form">,
+    "onSubmit" | "children" | "action" | "method" | "onReset"
+  > {
+  note: NoteDtoCorrupt;
+}
+
+function ViewOnlyNoteEditor(props: ViewOnlyNoteEditorProps) {
+  const [local, others] = splitProps(props, ["class"]);
+  return (
+    <form
+      {...others}
+      class={c("flex items-center justify-center p-4", local.class)}
+    >
+      <p>Note is corrupt, a safe view mode is WIP</p>
+    </form>
   );
 }
