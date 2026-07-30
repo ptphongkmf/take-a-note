@@ -1,4 +1,5 @@
 import type { SimplifyDeep } from "type-fest";
+import { assertExists } from "@std/assert";
 
 /**
  * A recursive type that removes `undefined` from types and converts
@@ -42,11 +43,11 @@ export function __compactKey__<const T extends ValidKeyInput>(
     for (let i = 0; i < input.length; i++) {
       const val = input[i];
       if (val !== undefined) {
-        if (val !== null && typeof val === "object") {
-          arrResult.push(__compactKey__(val as ValidKeyInput));
-        } else {
-          arrResult.push(val);
-        }
+        arrResult.push(
+          Array.isArray(val) || isPlainObject(val)
+            ? __compactKey__(val as ValidKeyInput)
+            : val,
+        );
       }
     }
     return arrResult as CompactKey<T>;
@@ -54,19 +55,24 @@ export function __compactKey__<const T extends ValidKeyInput>(
 
   // Handle Objects
   const objResult = {} as Record<string, unknown>;
-  for (const key in input) {
-    if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+  const keys = Object.keys(input);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    assertExists(key, "Object.keys index out of bounds");
 
     const val = (input as Record<string, unknown>)[key];
-
     if (val !== undefined) {
-      if (val !== null && typeof val === "object") {
-        objResult[key] = __compactKey__(val as ValidKeyInput);
-      } else {
-        objResult[key] = val;
-      }
+      objResult[key] = Array.isArray(val) || isPlainObject(val)
+        ? __compactKey__(val as ValidKeyInput)
+        : val;
     }
   }
 
   return objResult as CompactKey<T>;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === null || proto === Object.prototype;
 }
