@@ -1,4 +1,9 @@
+import "@tanstack/solid-query";
 import { QueryClient } from "@tanstack/solid-query";
+import type {
+  MutationKeyObjShape,
+  QueryKeyObjShape,
+} from "#shared/lib/tanstack-query/build-key.ts";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -7,3 +12,10 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+declare module "@tanstack/solid-query" {
+  interface Register {
+    queryKey: readonly [QueryKeyObjShape];
+    mutationKey: readonly [MutationKeyObjShape];
+  }
+}
