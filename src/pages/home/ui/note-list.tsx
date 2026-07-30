@@ -8,7 +8,7 @@ import Icon from "#shared/ui/icon/icon.tsx";
 export default function NoteListAsync(props: ComponentProps<"ul">) {
   const [local, others] = splitProps(props, ["class"]);
 
-  const noteListQuery = useSuspenseQuery(() => noteQueryList.list());
+  const noteListQuery = useSuspenseQuery(() => noteQueryList());
 
   return (
     <ul

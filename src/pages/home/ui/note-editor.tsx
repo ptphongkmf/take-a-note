@@ -36,7 +36,10 @@ import type {
 } from "#shared/api/services/note.ts";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
 import { useQueryClient } from "@tanstack/solid-query";
-import { noteQueryDetail } from "#entities/note/api/queries/note-detail-query.ts";
+import {
+  noteQueryDetailOrDefault,
+  noteQueryDetailOrDefaultKey,
+} from "#entities/note/api/queries/note-detail-or-default-query.ts";
 import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 
 interface NoteEditorProps extends
@@ -51,7 +54,7 @@ export default function NoteEditor(props: NoteEditorProps) {
   const [_, others] = splitProps(props, ["noteId"]);
 
   const noteQuery = useSuspenseQuery(() =>
-    noteQueryDetail.detailOrDefault(props.noteId)
+    noteQueryDetailOrDefault(props.noteId)
   );
 
   return (
@@ -148,7 +151,7 @@ function EditableNoteEditor(props: EditableNoteEditorProps) {
       });
 
       queryClient.setQueryData(
-        noteQueryDetail.detailOrDefault(savedNote.id).queryKey,
+        noteQueryDetailOrDefaultKey.detailOrDefault(savedNote.id),
         savedNote,
       );
     },
