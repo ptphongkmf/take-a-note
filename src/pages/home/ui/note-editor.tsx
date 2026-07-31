@@ -98,7 +98,6 @@ type NoteFormOutput = v.InferOutput<typeof NoteFormSchema>;
 
 function EditableNoteEditor(props: EditableNoteEditorProps) {
   const [local, others] = splitProps(props, ["class", "note"]);
-  const queryClient = useQueryClient();
 
   const [lastChangedAt, setLastChangedAt] = createSignal(
     Temporal.Now.instant(),
@@ -149,11 +148,6 @@ function EditableNoteEditor(props: EditableNoteEditorProps) {
           Result.unwrap(stringifyJson(savedNote.content)),
         );
       });
-
-      queryClient.setQueryData(
-        noteQueryDetailOrDefaultKey.detailOrDefault(savedNote.id),
-        savedNote,
-      );
     },
   });
 

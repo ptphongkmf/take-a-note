@@ -17,8 +17,4 @@ export const noteMutationSave = mutationOptions<
 
     return Result.unwrap(result);
   },
-  onSuccess: (_d, _v, _omr, _context) => {
-    // TODO: Invalidate only the relevant queries
-    // context.client.invalidateQueries();
-  },
 });

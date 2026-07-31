@@ -1,5 +1,5 @@
 import "@tanstack/solid-query";
-import { QueryClient } from "@tanstack/solid-query";
+import { MutationCache, QueryClient } from "@tanstack/solid-query";
 import type {
   MutationKeyObjShape,
   QueryKeyObjShape,
@@ -11,6 +11,11 @@ export const queryClient = new QueryClient({
       staleTime: 1000 * 30, // 30 seconds
     },
   },
+  mutationCache: new MutationCache({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  }),
 });
 
 declare module "@tanstack/solid-query" {
