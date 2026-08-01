@@ -1,0 +1,23 @@
+import type { ComponentProps } from "solid-js";
+import { splitProps } from "solid-js";
+import { c } from "#shared/lib/class-merger/c.ts";
+
+export default function Button(props: ComponentProps<"button">) {
+  const [local, others] = splitProps(props, ["class", "children"]);
+
+  return (
+    <button
+      type="button"
+      {...others}
+      class={c(
+        "size-fit cursor-pointer rounded-md px-3 py-1.5",
+        "transition-colors duration-100 hover:bg-neutral-200/60",
+        "disabled:pointer-events-none disabled:opacity-50",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+        local.class,
+      )}
+    >
+      {local.children}
+    </button>
+  );
+}

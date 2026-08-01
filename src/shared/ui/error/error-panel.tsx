@@ -13,6 +13,7 @@ import { formatErrorDetails } from "#shared/lib/errors/format-error.ts";
 import { c } from "#shared/lib/class-merger/c.ts";
 import MaterialSpinner from "#shared/ui/spinner/material-spinner.tsx";
 import Icon from "#shared/ui/icon/icon.tsx";
+import Button from "#shared/ui/button/button.tsx";
 import { delay } from "@std/async";
 
 interface ErrorPanelProps extends ComponentProps<"div"> {
@@ -127,37 +128,36 @@ export default function ErrorPanel(props: ErrorPanelProps) {
       </Show>
 
       <div class="flex w-full flex-wrap items-center justify-around gap-2 pt-2 text-fluid-sm font-medium">
-        <button
-          type="button"
+        <Button
           onClick={handleCopyDetails}
           class={c(
-            "flex items-center justify-center gap-2 cursor-pointer rounded-md px-4 py-2 transition-all duration-300 flex-1",
+            "flex items-center justify-center gap-2 flex-1 px-4 py-2 transition-colors",
             copyStatus() === "success" && "bg-green-300 text-emerald-800",
             copyStatus() === "error" && "bg-red-300 text-red-800 animate-shake",
-            copyStatus() === "idle" && "hover:bg-white/20"
+            copyStatus() === "idle" && "hover:bg-white/20",
           )}
         >
           <Switch fallback="Copy details">
             <Match when={copyStatus() === "success"}>
-                <Icon name="clipboard-check" />
-                <span>Copied</span>
+              <Icon name="clipboard-check" />
+              <span>Copied</span>
             </Match>
             <Match when={copyStatus() === "error"}>
-                <Icon name="clipboard-x" />
-                <span>Failed</span>
+              <Icon name="clipboard-x" />
+              <span>Failed</span>
             </Match>
           </Switch>
-        </button>
-        <button
-          type="button"
+        </Button>
+        
+        <Button
           onClick={handleRetry}
           disabled={retrying()}
-          class="flex items-center justify-center gap-2 cursor-pointer rounded-md bg-amber-100 px-4 py-2 transition-colors duration-150 hover:bg-amber-200/70 flex-1"
+          class="flex-1 items-center justify-center gap-2 flex bg-amber-100 px-4 py-2 hover:bg-amber-200/70"
         >
           <Show when={retrying()} fallback="Try Again">
             <MaterialSpinner />
           </Show>
-        </button>
+        </Button>
       </div>
     </div>
   );

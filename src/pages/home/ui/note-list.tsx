@@ -4,6 +4,7 @@ import { type ComponentProps, For, splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { Link } from "@tanstack/solid-router";
 import Icon from "#shared/ui/icon/icon.tsx";
+import Button from "#shared/ui/button/button.tsx";
 
 export default function NoteListAsync(props: ComponentProps<"ul">) {
   const [local, others] = splitProps(props, ["class"]);
@@ -43,17 +44,16 @@ export default function NoteListAsync(props: ComponentProps<"ul">) {
               </span>
             </Link>
 
-            <button
-              type="button"
+            <Button
               onClick={(e) => {
                 e.preventDefault();
                 alert("wip");
               }}
               aria-label="Delete note"
-              class="cursor-pointer p-2 pr-3 opacity-0 transition-all group-hover:opacity-100 hover:text-red-500 focus-visible:opacity-100"
+              class="p-2 pr-3 opacity-0 transition-opacity hover:bg-transparent hover:text-red-500 focus-visible:opacity-100 group-hover:opacity-100"
             >
               <Icon name="trash-2" class="size-4 shrink-0" />
-            </button>
+            </Button>
           </li>
         )}
       </For>
