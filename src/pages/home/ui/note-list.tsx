@@ -39,7 +39,7 @@ export default function NoteListAsync(props: ComponentProps<"ul">) {
                 {note.title}
               </span>
 
-              <span class="truncate whitespace-nowrap text-gray-500">
+              <span class="truncate text-right text-fluid-xs whitespace-nowrap text-gray-500">
                 TODO: add relative time | long text testttttttttttt
               </span>
             </Link>
@@ -50,7 +50,7 @@ export default function NoteListAsync(props: ComponentProps<"ul">) {
                 alert("wip");
               }}
               aria-label="Delete note"
-              class="p-2 pr-3 opacity-0 transition-opacity hover:bg-transparent hover:text-red-500 focus-visible:opacity-100 group-hover:opacity-100"
+              class="w-fit p-2 pr-3 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-transparent hover:text-red-500 focus-visible:opacity-100"
             >
               <Icon name="trash-2" class="size-4 shrink-0" />
             </Button>
