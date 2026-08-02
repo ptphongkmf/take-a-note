@@ -78,7 +78,7 @@ export default function Home() {
         </AsyncBoundary>
       </main>
 
-      <aside class="@container hidden rounded-md p-4 @5xl:col-start-3 @5xl:flex">
+      <aside class="@container hidden rounded-md p-4 @5xl:col-start-3 @5xl:block">
         <NoteAction />
       </aside>
     </div>

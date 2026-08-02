@@ -35,10 +35,8 @@ import type {
   NoteDtoValid,
 } from "#shared/api/services/note.ts";
 import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
-import { useQueryClient } from "@tanstack/solid-query";
 import {
   noteQueryDetailOrDefault,
-  noteQueryDetailOrDefaultKey,
 } from "#entities/note/api/queries/note-detail-or-default-query.ts";
 import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 
