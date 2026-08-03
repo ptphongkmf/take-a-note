@@ -7,7 +7,7 @@ interface IconProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
   name: IconName;
 }
 
-export default function Icon(props: IconProps) {
+export function Icon(props: IconProps) {
   const [local, others] = splitProps(props, ["name", "class"]);
 
   return (

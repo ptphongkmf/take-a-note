@@ -9,7 +9,7 @@ import {
 import { mergeRegister } from "@lexical/utils";
 import { createEffect, createSignal, onCleanup, Show } from "solid-js";
 
-export default function ActiveBlockIndicatorPlugin() {
+export function ActiveBlockIndicatorPlugin() {
   const [editor] = useLexicalComposerContext();
   const [isFocused, setIsFocused] = createSignal(true);
   const [activeElementTop, setActiveElementTop] = createSignal<number>();

@@ -2,7 +2,7 @@ import type { ComponentProps } from "solid-js";
 import { splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 
-export default function Button(props: ComponentProps<"button">) {
+export function Button(props: ComponentProps<"button">) {
   const [local, others] = splitProps(props, ["class", "children"]);
 
   return (

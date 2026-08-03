@@ -1,7 +1,7 @@
 import { Match, Switch, splitProps } from "solid-js";
 import type { ComponentProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
-import Icon from "#shared/ui/icon/icon.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
 import {
   createSmoothSavingState,
   type SmoothSavingOptions,
@@ -13,7 +13,7 @@ interface SaveIndicatorProps extends ComponentProps<"div"> {
   smoothOptions?: SmoothSavingOptions;
 }
 
-export default function SaveStatusIndicator(props: SaveIndicatorProps) {
+export function SaveStatusIndicator(props: SaveIndicatorProps) {
   const [local, others] = splitProps(props, [
     "class",
     "isDirty",

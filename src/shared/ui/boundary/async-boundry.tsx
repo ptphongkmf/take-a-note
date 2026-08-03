@@ -1,7 +1,7 @@
 import type { JSX, ParentProps } from "solid-js";
 import { ErrorBoundary, Suspense } from "solid-js";
-import SpinnerBlock from "#shared/ui/spinner/spinner-block.tsx";
-import ErrorPanel from "#shared/ui/error/error-panel.tsx";
+import { SpinnerBlock } from "#shared/ui/spinner/spinner-block.tsx";
+import { ErrorPanel } from "#shared/ui/error/error-panel.tsx";
 import { useQueryClient } from "@tanstack/solid-query";
 
 /**
@@ -34,7 +34,7 @@ interface AsyncBoundaryProps extends ParentProps {
  * A wrapper component that combines `ErrorBoundary` and `Suspense`.
  * Provides default UI fallbacks ("material-spinner" and "error-panel") when not explicitly provided.
  */
-export default function AsyncBoundary(props: AsyncBoundaryProps) {
+export function AsyncBoundary(props: AsyncBoundaryProps) {
   const queryClient = useQueryClient();
 
   const suspense = (): AsyncBoundaryProps["suspenseFallback"] => {

@@ -2,7 +2,7 @@ import type { ComponentProps } from "solid-js";
 import { splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 
-export default function SnappyButton(props: ComponentProps<"button">) {
+export function SnappyButton(props: ComponentProps<"button">) {
   const [local, others] = splitProps(props, ["class", "children"]);
 
   return (

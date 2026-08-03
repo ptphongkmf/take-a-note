@@ -31,7 +31,7 @@ export interface MaterialSpinnerProps extends ComponentProps<"svg"> {
  * <MaterialSpinner class="size-20 text-gray-400" thickness={2} />
  * ```
  */
-export default function MaterialSpinner(props: MaterialSpinnerProps) {
+export function MaterialSpinner(props: MaterialSpinnerProps) {
   const [local, others] = splitProps(props, ["class", "thickness"]);
 
   return (

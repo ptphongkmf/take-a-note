@@ -22,10 +22,10 @@ import { Editor, EditorInput } from "#shared/editor/lexical-editor.tsx";
 import * as v from "@valibot/valibot";
 import type { EditorState } from "lexical";
 import { Separator } from "@kobalte/core/separator";
-import NoteFormatSwitcher from "#features/switch-note-format/ui/note-format-switcher.tsx";
+import { NoteFormatSwitcher } from "#features/switch-note-format/ui/note-format-switcher.tsx";
 import { EditorFormats } from "#shared/editor/schema.ts";
 import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
-import SaveStatusIndicator from "#features/save-note/ui/save-status-indicator.tsx";
+import { SaveStatusIndicator } from "#features/save-note/ui/save-status-indicator.tsx";
 import { stringifyJson } from "#shared/lib/json/stringify.ts";
 import { vTemporalInstant } from "#shared/lib/schema/datetime.ts";
 import { Result } from "@praha/byethrow";
@@ -34,7 +34,7 @@ import type {
   NoteDtoCorrupt,
   NoteDtoValid,
 } from "#shared/api/services/note.ts";
-import createSaveNoteManager from "#features/save-note/model/save-note-manager.ts";
+import { createSaveNoteManager } from "#features/save-note/model/save-note-manager.ts";
 import {
   noteQueryDetailOrDefault,
 } from "#entities/note/api/queries/note-detail-or-default-query.ts";
@@ -48,7 +48,7 @@ interface NoteEditorProps extends
   noteId: string;
 }
 
-export default function NoteEditor(props: NoteEditorProps) {
+export function NoteEditor(props: NoteEditorProps) {
   const [_, others] = splitProps(props, ["noteId"]);
 
   const noteQuery = useSuspenseQuery(() =>

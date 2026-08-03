@@ -24,7 +24,7 @@ import { c } from "#shared/lib/class-merger/c.ts";
 import type { EditorFormat } from "#shared/editor/schema.ts";
 import { getEditorInitialConfig } from "#shared/editor/initial-config.ts";
 import { DraggableBlockPlugin } from "#shared/editor/plugins/draggable-block.tsx";
-import ActiveBlockIndicatorPlugin from "#shared/editor/plugins/active-block-indicator.tsx";
+import { ActiveBlockIndicatorPlugin } from "#shared/editor/plugins/active-block-indicator.tsx";
 import { OnChangePlugin } from "@ryotarofr/lexical-solid/LexicalOnChangePlugin";
 import { $isRootTextContentEmpty } from "@lexical/text";
 

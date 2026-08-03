@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from "@tanstack/solid-query";
+import { queryOptions } from "@tanstack/solid-query";
 import { Result } from "@praha/byethrow";
 import { buildQueryKey } from "#shared/lib/tanstack-query/build-key.ts";
 import { getNote } from "#shared/api/services/note.ts";

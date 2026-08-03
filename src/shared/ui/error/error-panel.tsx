@@ -11,9 +11,9 @@ import {
 } from "solid-js";
 import { formatErrorDetails } from "#shared/lib/errors/format-error.ts";
 import { c } from "#shared/lib/class-merger/c.ts";
-import MaterialSpinner from "#shared/ui/spinner/material-spinner.tsx";
-import Icon from "#shared/ui/icon/icon.tsx";
-import Button from "#shared/ui/button/button.tsx";
+import { MaterialSpinner } from "#shared/ui/spinner/material-spinner.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
+import { Button } from "#shared/ui/button/button.tsx";
 import { delay } from "@std/async";
 
 interface ErrorPanelProps extends ComponentProps<"div"> {
@@ -28,7 +28,7 @@ interface DisplayError {
   causeTrace: string;
 }
 
-export default function ErrorPanel(props: ErrorPanelProps) {
+export function ErrorPanel(props: ErrorPanelProps) {
   const [local, others] = splitProps(props, ["class"]);
   const [copyStatus, setCopyStatus] = createSignal<"idle" | "success" | "error">("idle");
   const [retrying, setRetrying] = createSignal(false);

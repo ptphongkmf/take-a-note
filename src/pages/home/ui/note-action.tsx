@@ -1,10 +1,10 @@
 import type { ComponentProps } from "solid-js";
 import { splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
-import Icon from "#shared/ui/icon/icon.tsx";
-import SnappyButton from "#shared/ui/button/snappy-button.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
+import { SnappyButton } from "#shared/ui/button/snappy-button.tsx";
 
-export default function NoteAction(props: ComponentProps<"div">) {
+export function NoteAction(props: ComponentProps<"div">) {
   const [local, others] = splitProps(props, ["class"]);
 
   return (

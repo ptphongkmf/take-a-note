@@ -19,7 +19,7 @@ interface NoteFormatSwitcherProps
   onInput: (value: EditorFormat) => void;
 }
 
-export default function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
+export function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
   const [local, others] = splitProps(props, ["value", "onInput", "class"]);
 
   return (

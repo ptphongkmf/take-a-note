@@ -14,7 +14,7 @@ interface SaveNoteManagerParams {
   onSaveSuccess?: (savedNote: NoteDtoValid) => void;
 }
 
-export default function createSaveNoteManager(params: SaveNoteManagerParams) {
+export function createSaveNoteManager(params: SaveNoteManagerParams) {
   let pendingSavePayload: NoteDtoValid | undefined = undefined;
 
   const saveMutation = useMutation(() => noteMutationSave);

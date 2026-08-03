@@ -3,10 +3,10 @@ import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 import { type ComponentProps, For, splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { Link } from "@tanstack/solid-router";
-import Icon from "#shared/ui/icon/icon.tsx";
-import Button from "#shared/ui/button/button.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
+import { Button } from "#shared/ui/button/button.tsx";
 
-export default function NoteListAsync(props: ComponentProps<"ul">) {
+export function NoteListAsync(props: ComponentProps<"ul">) {
   const [local, others] = splitProps(props, ["class"]);
 
   const noteListQuery = useSuspenseQuery(() => noteQueryList());

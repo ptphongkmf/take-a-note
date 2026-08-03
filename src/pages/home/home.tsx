@@ -1,6 +1,6 @@
-import NoteEditor from "#pages/home/ui/note-editor.tsx";
-import NoteListAsync from "#pages/home/ui/note-list.tsx";
-import NoteAction from "#pages/home/ui/note-action.tsx";
+import { NoteEditor } from "#pages/home/ui/note-editor.tsx";
+import { NoteListAsync } from "#pages/home/ui/note-list.tsx";
+import { NoteAction } from "#pages/home/ui/note-action.tsx";
 import {
   Sheet,
   SheetContent,
@@ -8,9 +8,9 @@ import {
   SheetTrigger,
 } from "#shared/ui/sheet/solidui-sheet.tsx";
 import { Show } from "solid-js";
-import Icon from "#shared/ui/icon/icon.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
 import { getRouteApi } from "@tanstack/solid-router";
-import AsyncBoundary from "#shared/ui/boundary/async-boundry.tsx";
+import { AsyncBoundary } from "#shared/ui/boundary/async-boundry.tsx";
 
 const HOME_ROUTE = getRouteApi("/notes/$id");
 

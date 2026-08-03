@@ -1,6 +1,6 @@
 import { Outlet } from "@tanstack/solid-router";
 import { Link } from "@tanstack/solid-router";
-import Icon from "#shared/ui/icon/icon.tsx";
+import { Icon } from "#shared/ui/icon/icon.tsx";
 
 export default function RootLayout() {
   return (
