@@ -33,8 +33,10 @@ type ValidKeyInput = Record<string, unknown> | unknown[];
  * Refs:
  * - https://github.com/TkDodo/blog-comments/discussions/71#discussioncomment-4348406
  * - https://github.com/TanStack/query/issues/3741
+ *
+ * @internal
  */
-export function __compactKey__<const T extends ValidKeyInput>(
+export function compactKey<const T extends ValidKeyInput>(
   input: T,
 ): CompactKey<T> {
   // Handle Arrays
@@ -45,7 +47,7 @@ export function __compactKey__<const T extends ValidKeyInput>(
       if (val !== undefined) {
         arrResult.push(
           Array.isArray(val) || isPlainObject(val)
-            ? __compactKey__(val as ValidKeyInput)
+            ? compactKey(val as ValidKeyInput)
             : val,
         );
       }
@@ -63,7 +65,7 @@ export function __compactKey__<const T extends ValidKeyInput>(
     const val = (input as Record<string, unknown>)[key];
     if (val !== undefined) {
       objResult[key] = Array.isArray(val) || isPlainObject(val)
-        ? __compactKey__(val as ValidKeyInput)
+        ? compactKey(val as ValidKeyInput)
         : val;
     }
   }

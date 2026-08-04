@@ -1,4 +1,4 @@
-import { __compactKey__ } from "#shared/lib/tanstack-query/compact-key.ts";
+import { compactKey } from "#shared/lib/tanstack-query/compact-key.ts";
 
 export type QueryKeyObjShape = {
   entity: string;
@@ -8,7 +8,7 @@ export type QueryKeyObjShape = {
 };
 
 export function buildQueryKey<const T extends QueryKeyObjShape>(keyObj: T) {
-  return [__compactKey__(keyObj)] as const;
+  return [compactKey(keyObj)] as const;
 }
 
 export type MutationKeyObjShape = {
@@ -21,5 +21,5 @@ export type MutationKeyObjShape = {
 export function buildMutationKey<const T extends MutationKeyObjShape>(
   keyObj: T,
 ) {
-  return [__compactKey__(keyObj)] as const;
+  return [compactKey(keyObj)] as const;
 }
