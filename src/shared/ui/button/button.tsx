@@ -21,3 +21,23 @@ export function Button(props: ComponentProps<"button">) {
     </button>
   );
 }
+
+export function ButtonLink(props: ComponentProps<"button">) {
+  const [local, others] = splitProps(props, ["class", "children"]);
+
+  return (
+    <button
+      type="button"
+      {...others}
+      class={c(
+        "size-fit w-full cursor-pointer rounded-md px-3 py-1.5",
+        "transition-colors duration-150 hover:bg-neutral-200/60",
+        "disabled:pointer-events-none disabled:opacity-50",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+        local.class,
+      )}
+    >
+      {local.children}
+    </button>
+  );
+}
