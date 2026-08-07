@@ -4,6 +4,7 @@ import type {
   MutationKeyObjShape,
   QueryKeyObjShape,
 } from "#shared/lib/tanstack-query/build-key.ts";
+import { AppError } from "#shared/lib/errors/app-error.ts";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,6 +15,15 @@ export const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: () => {
       queryClient.invalidateQueries();
+    },
+    onError: (error) => {
+      if (error instanceof AppError) {
+        // TODO: toast app error
+      } else if (error instanceof Error) {
+        // TODO: toast generic error
+      } else {
+        // TODO: toast unknown error
+      }
     },
   }),
 });
