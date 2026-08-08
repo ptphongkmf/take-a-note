@@ -1,5 +1,5 @@
 import { NoteEditor } from "#pages/home/ui/note-editor.tsx";
-import { NoteListAsync } from "#pages/home/ui/note-list.tsx";
+import { NoteList } from "#pages/home/ui/note-list.tsx";
 import { NoteAction } from "#pages/home/ui/note-action.tsx";
 import {
   Sheet,
@@ -60,7 +60,7 @@ export default function Home() {
 
         <nav class="w-full text-fluid-sm">
           <AsyncBoundary>
-            <NoteListAsync />
+            <NoteList />
           </AsyncBoundary>
         </nav>
       </aside>

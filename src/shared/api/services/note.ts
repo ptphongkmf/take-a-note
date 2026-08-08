@@ -285,6 +285,61 @@ export function saveNote(
   });
 }
 
+type DeleteNoteErrorCode = "NOTE_DELETE_FAILED";
+
+export class DeleteNoteError extends AppError<DeleteNoteErrorCode> {
+  public override readonly name = "DeleteNoteError";
+}
+
+export function deleteNote(
+  noteId: string,
+): Result.ResultAsync<void, DeleteNoteError> {
+  return Result.try({
+    try: async () => {
+      const db = idbClient();
+
+      const tx = db.transaction(["note_meta", "note_content"], "readwrite");
+
+      const metaPromise = tx.objectStore("note_meta").delete(noteId)
+        .catch((e) => {
+          throw new IdbOperationError({
+            action: "delete",
+            store: "note_meta",
+            cause: e,
+          });
+        });
+
+      const contentPromise = tx.objectStore("note_content").delete(noteId)
+        .catch((e) => {
+          throw new IdbOperationError({
+            action: "delete",
+            store: "note_content",
+            cause: e,
+          });
+        });
+
+      await Promise.all([
+        metaPromise,
+        contentPromise,
+        tx.done,
+      ]);
+    },
+    catch: (e) => {
+      const idbError = e instanceof IdbOperationError
+        ? e
+        : new IdbOperationError(
+          'Unknown error occurred while deleting from "note_meta" and "note_content" object store',
+          { code: "IDB_UNKNOWN_FAILURE", cause: e },
+        );
+
+      return new DeleteNoteError(
+        "Failed to delete the note from IndexedDB",
+        { code: "NOTE_DELETE_FAILED", cause: idbError },
+      );
+    },
+  });
+}
+
 type GarbageCollectNoteErrorCode = "NOTE_GC_FAILED";
 
 export class GarbageCollectNoteError
