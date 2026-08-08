@@ -12,6 +12,7 @@ import { noteMutationDelete } from "#features/delete-note/api/delete-note-mutati
 import { DeleteNoteConfirmDialog } from "#features/delete-note/ui/delete-note-confirm-dialog.tsx";
 import { Button } from "#shared/ui/button/button.tsx";
 import { Icon } from "#shared/ui/icon/icon.tsx";
+import { c } from "#shared/lib/class-merger/c.ts";
 
 interface DeleteNoteTargetContextValue {
   setSelectedNote: (note: SelectedNote) => void;
@@ -80,7 +81,7 @@ interface DeleteNoteTargetButtonProps
 }
 
 export function DeleteNoteTargetButton(props: DeleteNoteTargetButtonProps) {
-  const [_local, others] = splitProps(props, ["note"]);
+  const [_local, others] = splitProps(props, ["note", "class"]);
 
   const deleteNoteTarget = useDeleteNoteTarget();
 
@@ -88,6 +89,10 @@ export function DeleteNoteTargetButton(props: DeleteNoteTargetButtonProps) {
     <Button
       {...others}
       onClick={() => deleteNoteTarget.setSelectedNote(props.note)}
+      class={c(
+        "hover:bg-transparent hover:text-red-500 focus-visible:text-red-500",
+        props.class,
+      )}
     >
       <Icon name="trash-2" />
     </Button>

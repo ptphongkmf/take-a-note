@@ -51,7 +51,7 @@ export function NoteList(props: ComponentProps<"ul">) {
               <DeleteNoteTargetButton
                 note={{ id: note.id, title: note.title }}
                 aria-label="Delete note"
-                class="w-fit p-2 pr-3 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-transparent hover:text-red-500 focus-visible:opacity-100"
+                class="w-fit pr-3 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
               />
             </li>
           )}
