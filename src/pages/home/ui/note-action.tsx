@@ -3,7 +3,7 @@ import { splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { Icon } from "#shared/ui/icon/icon.tsx";
 import { SnappyButton } from "#shared/ui/button/snappy-button.tsx";
-import { SnappyButtonLink } from "#shared/ui/link/snappy-button-link.tsx";
+import { NewNoteButton } from "#features/new-note/ui/new-note-button.tsx";
 
 export function NoteAction(props: ComponentProps<"div">) {
   const [local, others] = splitProps(props, ["class"]);
@@ -14,13 +14,7 @@ export function NoteAction(props: ComponentProps<"div">) {
       {...others}
       class={c("@container grid auto-rows-auto grid-cols-2 gap-4", local.class)}
     >
-      <SnappyButtonLink
-        to="/notes/new"
-        class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
-      >
-        <Icon name="file-plus" class="text-amber-800" />
-        <span>New note</span>
-      </SnappyButtonLink>
+      <NewNoteButton />
       <SnappyButton
         type="button"
         class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
