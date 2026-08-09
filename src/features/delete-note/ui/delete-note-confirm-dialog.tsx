@@ -8,7 +8,7 @@ import { Button } from "#shared/ui/button/button.tsx";
 
 interface DeleteNoteConfirmDialogProps {
   isOpen: boolean;
-  title: string;
+  title?: string;
   onConfirm: () => void;
   onCancel: () => void;
   isPending: boolean;
@@ -21,9 +21,12 @@ export function DeleteNoteConfirmDialog(props: DeleteNoteConfirmDialogProps) {
         <AlertDialogTitle>Delete Confirmation</AlertDialogTitle>
 
         <AlertDialogDescription class="flex flex-col items-start justify-center gap-2">
-          <p>Delete this note? This can't be undone.</p>
-          <p class="text-fluid-base font-semibold text-gray-700">
-            {props.title}
+          <p>
+            Delete{" "}
+            <span class="text-fluid-base font-semibold">
+              {props.title || "this note"}
+            </span>{" "}
+            ? This can't be undone.
           </p>
         </AlertDialogDescription>
 

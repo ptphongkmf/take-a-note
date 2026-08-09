@@ -44,7 +44,7 @@ export function DeleteNoteTargetProvider(props: ParentProps) {
 
       <DeleteNoteConfirmDialog
         isOpen={!!selected()?.id}
-        title={latestSelected()?.title ?? ""}
+        title={latestSelected()?.title}
         onConfirm={() => {
           const id = selected()?.id;
 
