@@ -4,9 +4,14 @@ import { c } from "#shared/lib/class-merger/c.ts";
 import { Icon } from "#shared/ui/icon/icon.tsx";
 import { SnappyButton } from "#shared/ui/button/snappy-button.tsx";
 import { NewNoteButton } from "#features/new-note/ui/new-note-button.tsx";
+import { DeleteNoteButton } from "#features/delete-note/ui/delete-note-button.tsx";
 
-export function NoteAction(props: ComponentProps<"div">) {
-  const [local, others] = splitProps(props, ["class"]);
+interface NoteActionProps extends ComponentProps<"div"> {
+  noteId: string;
+}
+
+export function NoteAction(props: NoteActionProps) {
+  const [local, others] = splitProps(props, ["class", "noteId"]);
 
   return (
     <div
@@ -15,13 +20,7 @@ export function NoteAction(props: ComponentProps<"div">) {
       class={c("@container grid auto-rows-auto grid-cols-2 gap-4", local.class)}
     >
       <NewNoteButton />
-      <SnappyButton
-        type="button"
-        class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
-      >
-        <Icon name="file-x" class="text-amber-800" />
-        <span>Delete note</span>
-      </SnappyButton>
+      <DeleteNoteButton noteId={props.noteId} />
 
       <SnappyButton
         type="button"

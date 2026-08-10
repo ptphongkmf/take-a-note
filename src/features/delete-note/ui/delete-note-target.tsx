@@ -13,17 +13,13 @@ import { DeleteNoteConfirmDialog } from "#features/delete-note/ui/delete-note-co
 import { Button } from "#shared/ui/button/button.tsx";
 import { Icon } from "#shared/ui/icon/icon.tsx";
 import { c } from "#shared/lib/class-merger/c.ts";
+import type { SelectedNote } from "#features/delete-note/model/selected-note.ts";
 
 interface DeleteNoteTargetContextValue {
   setSelectedNote: (note: SelectedNote) => void;
 }
 
 const DeleteNoteTargetContext = createContext<DeleteNoteTargetContextValue>();
-
-interface SelectedNote {
-  id: string;
-  title: string;
-}
 
 export function DeleteNoteTargetProvider(props: ParentProps) {
   const [selected, setSelected] = createSignal<SelectedNote>();

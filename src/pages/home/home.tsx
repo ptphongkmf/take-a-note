@@ -79,7 +79,7 @@ export default function Home() {
       </main>
 
       <aside class="@container hidden rounded-md p-4 @5xl:col-start-3 @5xl:block">
-        <NoteAction />
+        <NoteAction noteId={routeParams().id} />
       </aside>
     </div>
   );
