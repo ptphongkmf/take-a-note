@@ -16,6 +16,7 @@ import { c } from "#shared/lib/class-merger/c.ts";
 import type { SelectedNote } from "#features/delete-note/model/selected-note.ts";
 import { useNavigate } from "@tanstack/solid-router";
 import { noteQueryAdjacentNoteId } from "#entities/note/api/queries/note-adjacent-note-id-query.ts";
+import { invariant } from "#shared/lib/invariant/invariant.ts";
 
 interface DeleteNoteTargetContextValue {
   setSelectedNote: (note: SelectedNote) => void;
@@ -94,11 +95,7 @@ export function DeleteNoteTargetProvider(props: DeleteNoteTargetProviderProps) {
 export function useDeleteNoteTarget() {
   const ctx = useContext(DeleteNoteTargetContext);
 
-  if (!ctx) {
-    throw new Error(
-      "DeleteNoteContext must be used within DeleteNoteContext.Provider",
-    );
-  }
+  invariant(ctx, "DeleteNoteTargetContext must be used within its Provider");
 
   return ctx;
 }
