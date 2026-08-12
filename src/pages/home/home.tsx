@@ -60,7 +60,7 @@ export default function Home() {
 
         <nav class="w-full text-fluid-sm">
           <AsyncBoundary>
-            <NoteList />
+            <NoteList activeNoteId={routeParams().id} />
           </AsyncBoundary>
         </nav>
       </aside>

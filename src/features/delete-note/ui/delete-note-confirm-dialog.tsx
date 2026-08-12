@@ -9,7 +9,7 @@ import { Button } from "#shared/ui/button/button.tsx";
 interface DeleteNoteConfirmDialogProps {
   isOpen: boolean;
   title?: string;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   onCancel: () => void;
   isPending: boolean;
 }

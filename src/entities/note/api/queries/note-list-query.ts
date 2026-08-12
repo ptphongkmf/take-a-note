@@ -6,7 +6,7 @@ import {
 import { buildQueryKey } from "#shared/lib/tanstack-query/build-key.ts";
 import { noteQueryKey } from "#entities/note/api/queries/note-query.ts";
 import { queryOptions } from "@tanstack/solid-query";
-import type { NoteList } from "#entities/note/model/types.ts";
+import type { NoteList } from "#entities/note/model/note.ts";
 import { safeStringify } from "#shared/lib/string/safe-stringify.ts";
 import { EditorFormatsSafeSchema } from "#shared/editor/schema.ts";
 import * as v from "@valibot/valibot";

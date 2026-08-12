@@ -340,6 +340,80 @@ export function deleteNote(
   });
 }
 
+type GetAdjacentNoteIdErrorCode = "NOTE_GET_ADJACENT_ID_FAILED";
+
+export class GetAdjacentNoteIdError
+  extends AppError<GetAdjacentNoteIdErrorCode> {
+  public override readonly name = "GetAdjacentNoteIdError";
+}
+
+export function getAdjacentNoteId(
+  targetId: string,
+): Result.ResultAsync<string | undefined, GetAdjacentNoteIdError> {
+  return Result.try({
+    try: async () => {
+      const db = idbClient();
+      const tx = db.transaction("note_meta", "readonly");
+      const store = tx.objectStore("note_meta");
+
+      const targetKey = await store.getKey(targetId).catch((e) => {
+        throw new IdbOperationError({
+          action: "read",
+          store: "note_meta",
+          cause: e,
+        });
+      });
+
+      if (!targetKey) {
+        return undefined;
+      }
+
+      const nextCursor = await store
+        .openKeyCursor(IDBKeyRange.lowerBound(targetId, true))
+        .catch((e) => {
+          throw new IdbOperationError({
+            action: "read",
+            store: "note_meta",
+            cause: e,
+          });
+        });
+
+      if (nextCursor?.key) {
+        return nextCursor.key;
+      }
+
+      const prevCursor = await store
+        .openKeyCursor(IDBKeyRange.upperBound(targetId, true), "prev")
+        .catch((e) => {
+          throw new IdbOperationError({
+            action: "read",
+            store: "note_meta",
+            cause: e,
+          });
+        });
+
+      if (prevCursor?.key) {
+        return prevCursor.key;
+      }
+
+      return undefined;
+    },
+    catch: (e) => {
+      const idbError = e instanceof IdbOperationError
+        ? e
+        : new IdbOperationError(
+          'Unknown error occurred while querying "note_meta" object store for adjacent note',
+          { code: "IDB_UNKNOWN_FAILURE", cause: e },
+        );
+
+      return new GetAdjacentNoteIdError(
+        "Failed to retrieve the adjacent note id from IndexedDB",
+        { code: "NOTE_GET_ADJACENT_ID_FAILED", cause: idbError },
+      );
+    },
+  });
+}
+
 type GarbageCollectNoteErrorCode = "NOTE_GC_FAILED";
 
 export class GarbageCollectNoteError

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/solid-query";
+import { useMutation, useQueryClient } from "@tanstack/solid-query";
 import {
   type ComponentProps,
   createContext,
@@ -14,6 +14,8 @@ import { Button } from "#shared/ui/button/button.tsx";
 import { Icon } from "#shared/ui/icon/icon.tsx";
 import { c } from "#shared/lib/class-merger/c.ts";
 import type { SelectedNote } from "#features/delete-note/model/selected-note.ts";
+import { useNavigate } from "@tanstack/solid-router";
+import { noteQueryAdjacentNoteId } from "#entities/note/api/queries/note-adjacent-note-id-query.ts";
 
 interface DeleteNoteTargetContextValue {
   setSelectedNote: (note: SelectedNote) => void;
@@ -21,8 +23,16 @@ interface DeleteNoteTargetContextValue {
 
 const DeleteNoteTargetContext = createContext<DeleteNoteTargetContextValue>();
 
-export function DeleteNoteTargetProvider(props: ParentProps) {
+interface DeleteNoteTargetProviderProps extends ParentProps {
+  activeNoteId: string;
+}
+
+export function DeleteNoteTargetProvider(props: DeleteNoteTargetProviderProps) {
   const [selected, setSelected] = createSignal<SelectedNote>();
+  const [isProcessing, setIsProcessing] = createSignal(false);
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const latestSelected = createMemo<SelectedNote | undefined>(
     (prev) => selected() ?? prev,
@@ -41,19 +51,41 @@ export function DeleteNoteTargetProvider(props: ParentProps) {
       <DeleteNoteConfirmDialog
         isOpen={!!selected()?.id}
         title={latestSelected()?.title}
-        onConfirm={() => {
+        onConfirm={async () => {
           const id = selected()?.id;
+          if (!id) return;
 
-          if (id) {
-            deleteMutation.mutate(id, {
-              onSettled: () => {
-                setSelected(undefined);
-              },
-            });
-          }
+          setIsProcessing(true);
+
+          const isActiveNote = id === props.activeNoteId;
+          const adjacentId = isActiveNote
+            ? await queryClient.fetchQuery(noteQueryAdjacentNoteId(id)).catch(
+              () => undefined,
+            )
+            : undefined;
+
+          deleteMutation.mutate(id, {
+            onSuccess: () => {
+              if (!isActiveNote) return;
+
+              if (adjacentId) {
+                navigate({
+                  to: "/notes/$id",
+                  params: { id: adjacentId },
+                  replace: true,
+                });
+              } else {
+                navigate({ to: "/", replace: true });
+              }
+            },
+            onSettled: () => {
+              setSelected(undefined);
+              setIsProcessing(false);
+            },
+          });
         }}
         onCancel={() => setSelected(undefined)}
-        isPending={deleteMutation.isPending}
+        isPending={isProcessing() || deleteMutation.isPending}
       />
     </DeleteNoteTargetContext.Provider>
   );

@@ -9,13 +9,17 @@ import {
   DeleteNoteTargetProvider,
 } from "#features/delete-note/ui/delete-note-target.tsx";
 
-export function NoteList(props: ComponentProps<"ul">) {
+interface NoteListProps extends ComponentProps<"ul"> {
+  activeNoteId: string;
+}
+
+export function NoteList(props: NoteListProps) {
   const [local, others] = splitProps(props, ["class"]);
 
   const noteListQuery = useSuspenseQuery(() => noteQueryList());
 
   return (
-    <DeleteNoteTargetProvider>
+    <DeleteNoteTargetProvider activeNoteId={props.activeNoteId}>
       <ul
         {...others}
         class={c(

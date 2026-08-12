@@ -1,4 +1,4 @@
-const STORAGE_KEY = "last_opened_note";
+const STORAGE_KEY = "last-opened-note-id";
 
 export function getLastOpenedNoteId(): string | undefined {
   return localStorage.getItem(STORAGE_KEY) ?? undefined;
