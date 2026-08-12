@@ -27,8 +27,17 @@ import { DraggableBlockPlugin } from "#shared/editor/plugins/draggable-block.tsx
 import { ActiveBlockIndicatorPlugin } from "#shared/editor/plugins/active-block-indicator.tsx";
 import { OnChangePlugin } from "@ryotarofr/lexical-solid/LexicalOnChangePlugin";
 import { $isRootTextContentEmpty } from "@lexical/text";
+import { invariant } from "#shared/lib/invariant/invariant.ts";
 
-const EditorFormatContext = createContext<EditorFormat>("plain-text");
+const EditorFormatContext = createContext<EditorFormat>();
+
+export function useEditorFormat() {
+  const format = useContext(EditorFormatContext);
+
+  invariant(format, "EditorFormatContext must be used within its Provider");
+
+  return format;
+}
 
 interface EditorProps
   extends Omit<ComponentProps<"div">, "onInput">, ParentProps {
@@ -100,7 +109,7 @@ export function EditorInput(props: EditorInputProps) {
     if (divWrapperRef) setWrapperRef(divWrapperRef);
   });
 
-  const format = useContext(EditorFormatContext);
+  const format = useEditorFormat();
 
   function placeholderFn() {
     return (
