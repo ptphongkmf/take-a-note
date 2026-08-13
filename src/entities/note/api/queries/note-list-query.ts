@@ -23,8 +23,8 @@ type Failure = Result.InferFailure<typeof listNotes>;
 export function noteQueryList(filters?: listNoteFiltersOpts) {
   return queryOptions<NoteList[], Failure>({
     queryKey: noteQueryListKey.list(filters),
-    queryFn: async (_filters) => {
-      const result = Result.unwrap(await listNotes());
+    queryFn: async () => {
+      const result = Result.unwrap(await listNotes(filters));
 
       const normalizedResult: NoteList[] = [];
       for (const noteMeta of result) {

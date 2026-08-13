@@ -152,12 +152,16 @@ export class ListNotesError extends AppError<ListNotesErrorCode> {
 }
 
 export type listNoteFiltersOpts = {
-  search?: string;
+  sort?: "newest" | "oldest";
 };
 
 export function listNotes(
-  _filters?: listNoteFiltersOpts,
+  providedFilters?: listNoteFiltersOpts,
 ): Result.ResultAsync<NoteMetaDto[], ListNotesError> {
+  const filters: Required<listNoteFiltersOpts> = {
+    sort: providedFilters?.sort ?? "newest",
+  };
+
   return Result.pipe(
     Result.try({
       try: async () => {
@@ -191,16 +195,26 @@ export function listNotes(
       },
     }),
     Result.map((metaList) => {
-      const validatedList: NoteMetaDto[] = [];
+      const items: { validatedDto: NoteMetaDto; epoch: number }[] = [];
 
       for (const meta of metaList) {
         const result = parseSchema(NoteMetaDtoSchema, meta);
 
-        if (Result.isSuccess(result)) {
-          validatedList.push(result.value);
+        if (Result.isSuccess(result) && !result.value.isCorrupt) {
+          items.push({
+            validatedDto: result.value,
+            epoch: result.value.updatedAt.epochMilliseconds,
+          });
         } else {
           if (meta.id && typeof meta.id === "string") {
-            validatedList.push({ ...meta, isCorrupt: true });
+            const epoch = typeof meta.updatedAt === "number"
+              ? meta.updatedAt
+              : 0;
+
+            items.push({
+              validatedDto: { ...meta, isCorrupt: true },
+              epoch,
+            });
           } else {
             // ignore the record if it doesn't have a valid id, as we cannot reference it later
             // TODO: warn or log error or do something about it? should we even nortify user?
@@ -208,7 +222,20 @@ export function listNotes(
         }
       }
 
-      return validatedList;
+      items.sort((a, b) => {
+        switch (filters.sort) {
+          case "newest":
+            return b.epoch - a.epoch;
+          case "oldest":
+            return a.epoch - b.epoch;
+          default: {
+            const exhaustiveCheck: never = filters.sort;
+            return exhaustiveCheck;
+          }
+        }
+      });
+
+      return items.map((item) => item.validatedDto);
     }),
   );
 }
