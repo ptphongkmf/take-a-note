@@ -15,7 +15,7 @@ import { parseTemporal } from "#shared/lib/datetime/parse.ts";
 export const noteQueryListKey = {
   all: () => buildQueryKey({ ...noteQueryKey.all()[0], scope: "list" }),
   list: (filters?: listNoteFiltersOpts) =>
-    buildQueryKey({ ...noteQueryListKey.all()[0], filters }),
+    buildQueryKey({ ...noteQueryListKey.all()[0], params: filters }),
 };
 
 type Failure = Result.InferFailure<typeof listNotes>;

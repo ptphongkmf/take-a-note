@@ -5,10 +5,9 @@ export type QueryKeyObjShape = {
   entity: string;
   scope?: string;
   id?: string;
-  filters?: Record<string, unknown>;
+  params?: Record<string, unknown>;
 };
 
-// export function buildQueryKey<const T extends QueryKeyObjShape>(keyObj: T) {
 export function buildQueryKey<const T extends Exact<QueryKeyObjShape, T>>(
   keyObj: T,
 ) {
