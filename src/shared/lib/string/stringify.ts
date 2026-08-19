@@ -1,4 +1,4 @@
-export function safeStringify(
+export function stringifyOrFallback(
   v: unknown,
   fallback: string = "[Unstringifiable Value]",
 ): string {

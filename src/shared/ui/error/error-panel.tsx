@@ -1,5 +1,5 @@
 import { AppError } from "#shared/lib/errors/app-error.ts";
-import { safeStringify } from "#shared/lib/string/safe-stringify.ts";
+import { stringifyOrFallback } from "#shared/lib/string/stringify.ts";
 import {
   type ComponentProps,
   createSignal,
@@ -30,7 +30,9 @@ interface DisplayError {
 
 export function ErrorPanel(props: ErrorPanelProps) {
   const [local, others] = splitProps(props, ["class"]);
-  const [copyStatus, setCopyStatus] = createSignal<"idle" | "success" | "error">("idle");
+  const [copyStatus, setCopyStatus] = createSignal<
+    "idle" | "success" | "error"
+  >("idle");
   const [retrying, setRetrying] = createSignal(false);
 
   const displayError = (): DisplayError =>
@@ -45,14 +47,13 @@ export function ErrorPanel(props: ErrorPanelProps) {
       }
       : {
         name: "Unknown Error",
-        message: safeStringify(props.e),
+        message: stringifyOrFallback(props.e),
         meta: [],
-        causeTrace: `Unknown Error: ${safeStringify(props.e)}`,
+        causeTrace: `Unknown Error: ${stringifyOrFallback(props.e)}`,
       };
 
   async function handleCopyDetails() {
     if (copyStatus() !== "idle") return;
-
 
     try {
       await navigator.clipboard.writeText(displayError().causeTrace);
@@ -148,7 +149,7 @@ export function ErrorPanel(props: ErrorPanelProps) {
             </Match>
           </Switch>
         </Button>
-        
+
         <Button
           onClick={handleRetry}
           disabled={retrying()}

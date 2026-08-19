@@ -7,7 +7,7 @@ import { buildQueryKey } from "#shared/lib/tanstack-query/build-key.ts";
 import { noteQueryKey } from "#entities/note/api/queries/note-query.ts";
 import { queryOptions } from "@tanstack/solid-query";
 import type { NoteList } from "#entities/note/model/note.ts";
-import { safeStringify } from "#shared/lib/string/safe-stringify.ts";
+import { stringifyOrFallback } from "#shared/lib/string/stringify.ts";
 import { EditorFormatsSafeSchema } from "#shared/editor/schema.ts";
 import * as v from "@valibot/valibot";
 import { parseTemporal } from "#shared/lib/datetime/parse.ts";
@@ -56,7 +56,7 @@ export function noteQueryList(filters?: listNoteFiltersOpts) {
 
           normalizedResult.push({
             id: noteMeta.id,
-            title: safeStringify(noteMeta.title),
+            title: stringifyOrFallback(noteMeta.title),
             format: v.parse(EditorFormatsSafeSchema, noteMeta.format),
             isCorrupt: noteMeta.isCorrupt,
             createdAt: safeCreatedAt,

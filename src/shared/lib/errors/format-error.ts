@@ -1,5 +1,5 @@
 import { AppError } from "#shared/lib/errors/app-error.ts";
-import { safeStringify } from "#shared/lib/string/safe-stringify.ts";
+import { stringifyOrFallback } from "#shared/lib/string/stringify.ts";
 
 interface FormatErrorOptions {
   indent?: number;
@@ -39,7 +39,9 @@ export function formatErrorDetails(e: Error): string {
 
       currentCause = currentCause.cause;
     } else {
-      details += `${PREFIX}${safeStringify(currentCause, "Unknown Error")}\n`;
+      details += `${PREFIX}${
+        stringifyOrFallback(currentCause, "Unknown Error")
+      }\n`;
 
       break;
     }
