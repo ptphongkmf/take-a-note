@@ -5,7 +5,7 @@ import { parseSchema } from "#shared/lib/schema/parse.ts";
 import { AppError } from "#shared/lib/errors/app-error.ts";
 import * as v from "@valibot/valibot";
 import {
-  EditorFormats,
+  EditorFormatSchema,
   SerializedEditorStateSchema,
 } from "#shared/editor/schema.ts";
 import { vTrimNonEmptyString } from "#shared/lib/schema/string.ts";
@@ -15,7 +15,7 @@ const NoteMetaDtoSchema = v.variant("isCorrupt", [
   v.object({
     id: vTrimNonEmptyString,
     title: v.string(),
-    format: v.enum(EditorFormats),
+    format: EditorFormatSchema,
     isCorrupt: v.literal(false),
     createdAt: v.pipe(
       v.number(),

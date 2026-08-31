@@ -35,7 +35,7 @@ export function DeleteNoteButton(props: DeleteNoteButtonProps) {
         onClick={() => setOpen(true)}
         class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
       >
-        <Icon name="file-x" class="text-amber-800" />
+        <Icon name="trash-2" class="text-amber-800" />
         <span>Delete note</span>
       </SnappyButton>
 

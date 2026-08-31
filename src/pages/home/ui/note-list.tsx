@@ -9,6 +9,7 @@ import {
   DeleteNoteTargetProvider,
 } from "#features/delete-note/ui/delete-note-target.tsx";
 import { stringifyOrFallback } from "#shared/lib/string/stringify.ts";
+import { NoteFormatIcon } from "#entities/note/ui/note-format.tsx";
 
 interface NoteListProps extends ComponentProps<"ul"> {
   activeNoteId: string;
@@ -36,9 +37,11 @@ export function NoteList(props: NoteListProps) {
             const noteTitle = () =>
               stringifyOrFallback(note.title, "Corrupted Note");
 
+            const noteFormat = () => stringifyOrFallback(note.format);
+
             return (
-              <li class="group flex w-full items-center border-b-2 
-              border-transparent text-fluid-xs transition-colors duration-75 hover:border-amber-800">
+              <li class="group flex w-full items-center border-b-2 border-transparent
+              text-fluid-base transition-colors duration-75 hover:border-amber-800">
                 <Link
                   to="/notes/$id"
                   params={{ id: note.id }}
@@ -46,9 +49,12 @@ export function NoteList(props: NoteListProps) {
                   class="grid flex-1 grid-cols-[auto_minmax(0,1fr)_7rem] items-center gap-3 text-gray-900"
                 >
                   {/* TODO: add markdown, plain, rich icon */}
-                  <Icon name="bug" class="shrink-0 text-gray-600" />
+                  <NoteFormatIcon
+                    format={noteFormat()}
+                    class="size-5 text-amber-900"
+                  />
 
-                  <span class="truncate text-left text-fluid-base">
+                  <span class="truncate text-left">
                     {noteTitle()}
                   </span>
 
