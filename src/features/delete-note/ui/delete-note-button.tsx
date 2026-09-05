@@ -33,7 +33,7 @@ export function DeleteNoteButton(props: DeleteNoteButtonProps) {
       <SnappyButton
         disabled={deleteMutation.isPending}
         onClick={() => setOpen(true)}
-        class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
+        class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100 active:bg-amber-200"
       >
         <Icon name="trash-2" class="text-amber-800" />
         <span>Delete note</span>
