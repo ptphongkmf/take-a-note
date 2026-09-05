@@ -5,7 +5,7 @@ export function NewNoteButton() {
   return (
     <SnappyButtonLink
       to="/notes/new"
-      class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100"
+      class="col-span-2 flex items-center justify-center gap-2 hover:bg-amber-100 active:bg-amber-200"
     >
       <Icon name="file-plus" class="text-amber-800" />
       <span>New note</span>
