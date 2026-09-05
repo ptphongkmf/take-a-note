@@ -12,6 +12,7 @@ import {
 import { type EditorFormat, EditorFormats } from "#shared/editor/schema.ts";
 import { titleCase } from "scule";
 import { c } from "#shared/lib/class-merger/c.ts";
+import { NoteFormatLabel } from "#entities/note/ui/note-format.tsx";
 
 interface NoteFormatSwitcherProps
   extends Omit<ComponentProps<"select">, "value" | "onInput"> {
@@ -31,9 +32,9 @@ export function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
       itemComponent={(props) => (
         <SelectItem
           item={props.item}
-          class="cursor-pointer gap-2 text-fluid-sm hover:bg-amber-200 active:bg-amber-200"
+          class="cursor-pointer gap-2 text-fluid-sm hover:bg-amber-200 focus:bg-amber-200 active:bg-amber-300"
         >
-          {titleCase(props.item.rawValue)}
+          <NoteFormatLabel format={props.item.rawValue} />
         </SelectItem>
       )}
       class={c(
@@ -48,12 +49,12 @@ export function NoteFormatSwitcher(props: NoteFormatSwitcherProps) {
       </SelectLabel>
 
       <SelectTrigger
-        aria-label="Fruit"
+        aria-label="Note Format"
         class="h-fit w-full cursor-pointer gap-2 rounded-none border-0 border-b-3 border-transparent bg-transparent p-2 py-1 text-fluid-sm font-medium 
                   focus:border-amber-600 focus:ring-0 focus:ring-offset-0 focus:outline-3"
       >
         <SelectValue<string>>
-          {(state) => titleCase(state.selectedOption())}
+          {(state) => <NoteFormatLabel format={state.selectedOption()} />}
         </SelectValue>
       </SelectTrigger>
       <SelectContent class="border-amber-600 bg-paper-editor" />
