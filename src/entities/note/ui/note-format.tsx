@@ -1,7 +1,7 @@
 import { type EditorFormat, isEditorFormat } from "#shared/editor/schema.ts";
 import type { IconName } from "#shared/ui/icon/icons.gen.ts";
 import { Icon } from "#shared/ui/icon/icon.tsx";
-import { ComponentProps, splitProps } from "solid-js";
+import { type ComponentProps, splitProps } from "solid-js";
 import { titleCase } from "scule";
 import { c } from "#shared/lib/class-merger/c.ts";
 

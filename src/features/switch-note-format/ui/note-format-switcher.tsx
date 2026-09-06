@@ -10,7 +10,6 @@ import {
   SelectValue,
 } from "#shared/ui/select/solidui-select.tsx";
 import { type EditorFormat, EditorFormats } from "#shared/editor/schema.ts";
-import { titleCase } from "scule";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { NoteFormatLabel } from "#entities/note/ui/note-format.tsx";
 

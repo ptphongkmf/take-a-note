@@ -3,7 +3,6 @@ import { useSuspenseQuery } from "#shared/lib/tanstack-query/suspense-query.ts";
 import { type ComponentProps, For, splitProps } from "solid-js";
 import { c } from "#shared/lib/class-merger/c.ts";
 import { Link } from "@tanstack/solid-router";
-import { Icon } from "#shared/ui/icon/icon.tsx";
 import {
   DeleteNoteTargetButton,
   DeleteNoteTargetProvider,
