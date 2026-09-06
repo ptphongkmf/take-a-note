@@ -20,8 +20,7 @@ export default function Home() {
   return (
     <div class="grid size-full grid-cols-1 grid-rows-[auto_1fr] gap-2 p-[clamp(0.5rem,2cqi,1rem)] @5xl:grid-cols-[minmax(15rem,1fr)_minmax(26rem,52rem)_minmax(15rem,1fr)] 
     @5xl:grid-rows-1 @5xl:gap-[clamp(0.5rem,2cqi,1rem)]">
-      {
-        /* <nav class="flex w-full items-center justify-between bg-transparent @5xl:hidden">
+      <nav class="flex w-full items-center justify-between bg-transparent @5xl:hidden">
         <Sheet>
           <SheetTrigger class="flex cursor-pointer items-center justify-center gap-1 rounded-md p-1 text-fluid-sm font-medium text-amber-800
           transition-colors hover:bg-amber-100">
@@ -34,7 +33,9 @@ export default function Home() {
               Notes
             </SheetTitle>
 
-            <NoteList />
+            <AsyncBoundary>
+              <NoteList activeNoteId={routeParams().id} />
+            </AsyncBoundary>
           </SheetContent>
         </Sheet>
 
@@ -45,11 +46,10 @@ export default function Home() {
             <Icon name="ellipsis-vertical" />
           </SheetTrigger>
           <SheetContent position="right">
-            <NoteAction />
+            <NoteAction noteId={routeParams().id} />
           </SheetContent>
         </Sheet>
-      </nav> */
-      }
+      </nav>
 
       <aside class="@container hidden flex-col items-start justify-start gap-4 rounded-md p-4
       @5xl:col-start-1 @5xl:flex">
